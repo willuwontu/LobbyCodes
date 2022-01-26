@@ -14,7 +14,7 @@ namespace LobbyCodes.UI
             {
                 if (LobbyUI._BG != null) { return LobbyUI._BG; }
 
-                LobbyUI._BG = new GameObject("LobbyCode", typeof(RectTransform), typeof(HorizontalLayoutGroup), typeof(Image), typeof(ContentSizeFitter));
+                LobbyUI._BG = new GameObject("LobbyCode", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(HorizontalLayoutGroup), typeof(ContentSizeFitter));
                 LobbyUI._BG.transform.parent = UnityEngine.GameObject.Find("/Game/UI/UI_Game/Canvas/").transform;
 
                 // We want to dock it in the top right corner
@@ -23,9 +23,9 @@ namespace LobbyCodes.UI
                 rect.anchorMin = new Vector2(1, 1);
                 rect.anchorMax = new Vector2(1, 1);
                 rect.pivot = new Vector2(1, 1);
-                rect.offsetMin = new Vector2(-390, -70);
+                rect.offsetMin = new Vector2(-390, -100);
                 rect.offsetMax = new Vector2(-10, -10);
-                rect.sizeDelta = new Vector2(380, 60);
+                rect.sizeDelta = new Vector2(380, 90);
 
                 var image = LobbyUI._BG.GetComponent<Image>();
                 image.color = new Color(1, 1, 1, 0.05f);
@@ -36,7 +36,7 @@ namespace LobbyCodes.UI
                 group.childForceExpandHeight = true;
                 group.childControlWidth = false;
                 group.childForceExpandWidth = false;
-                group.spacing = 10f;
+                group.spacing = 5f;
                 group.padding = new RectOffset(5, 5, 5, 5);
 
                 var sizeFitter = _BG.GetComponent<ContentSizeFitter>();
@@ -55,8 +55,32 @@ namespace LobbyCodes.UI
             {
                 if (LobbyUI._input != null) { return LobbyUI._input; }
 
-                LobbyUI._input = new GameObject("LobbyCodeInput", typeof(TMP_InputField));
+                LobbyUI._input = new GameObject("LobbyCodeInput", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(TMP_InputField));
                 LobbyUI._input.transform.parent = LobbyUI.BG.transform;
+
+                TMP_InputField inputField = LobbyUI._input.GetComponent<TMP_InputField>();
+                inputField.readOnly = true;
+
+                RectTransform rect = null;
+                rect = LobbyUI._input.GetComponent<RectTransform>();
+                rect.localScale = new Vector3(1, 1, 1);
+
+                var textView = new GameObject("Text Area", typeof(RectTransform), typeof(RectMask2D));
+                textView.transform.parent = LobbyUI._input.transform;
+                {
+                    rect = textView.GetComponent<RectTransform>();
+                    rect.localScale = new Vector3(1, 1, 1);
+                    rect.anchorMin = new Vector2(0, 0);
+                    rect.anchorMax = new Vector2(1, 1);
+                    rect.pivot = new Vector2(0.5f, 0.5f);
+                    rect.offsetMin = new Vector2(5, 5);
+                    rect.offsetMax = new Vector2(-5, -5);
+                }
+
+                inputField.textViewport = rect;
+
+                var inputText = new GameObject("Input Text", typeof(RectTransform), typeof(CanvasRenderer), typeof(TextMeshProUGUI));
+
                 return LobbyUI._input;
             }
         }

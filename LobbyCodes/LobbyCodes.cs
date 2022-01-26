@@ -2,6 +2,9 @@
 using System.Reflection;
 using BepInEx;
 using UnboundLib;
+using UnityEngine;
+using UnityEngine.UI;
+using Jotunn.Utils;
 
 namespace LobbyCodes
 {
@@ -14,11 +17,15 @@ namespace LobbyCodes
         private const string ModName = "Lobby Codes";
         public const string Version = "1.0.0"; // What version are we on (major.minor.patch)?
 
+        AssetBundle assets;
+
         public static LobbyCodes instance { get; private set; }
 
         void Start()
         {
             instance = this;
+
+            assets = AssetUtils.LoadAssetBundleFromResources("lobbycodes", typeof(LobbyCodes).Assembly);
         }
     }
 }
