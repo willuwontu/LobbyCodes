@@ -13,7 +13,7 @@ namespace LobbyCodes
     [BepInProcess("Rounds.exe")]
     public class LobbyCodes : BaseUnityPlugin
     {
-        private const string ModId = "com.rounds.LpbbyCodes";
+        private const string ModId = "com.roundsmoddingcommunity.rounds.LobbyCodes";
         private const string ModName = "Lobby Codes";
         public const string Version = "1.0.0"; // What version are we on (major.minor.patch)?
 
