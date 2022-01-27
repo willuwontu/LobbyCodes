@@ -1,7 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>net462</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,8 +12,12 @@
     <EmbeddedResource Include="AssetsEmbedded\lobbycodes" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="UnboundLib" Version="2.10.2" />
+  </ItemGroup>
+
   <PropertyGroup>
-    <RoundsFolder>D:\Program Files (x86)\Steam\steamapps\common\ROUNDS</RoundsFolder>
+    <RoundsFolder>C:\Program Files (x86)\Steam\steamapps\common\ROUNDS</RoundsFolder>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,7 +25,7 @@
       <HintPath>$(RoundsFolder)\Rounds_Data\Managed\Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="BepInEx">
-      <HintPath>..\..\..\Visual Studio 2019\Projects\Rounds\Dependencies\BepInEx.dll</HintPath>
+      <HintPath>$(RoundsFolder)\BepInEx\core\BepInEx.dll</HintPath>
     </Reference>
     <Reference Include="Photon3Unity3D">
       <HintPath>$(RoundsFolder)\Rounds_Data\Managed\Photon3Unity3D.dll</HintPath>
@@ -34,9 +38,6 @@
     </Reference>
     <Reference Include="PhotonUnityNetworking">
       <HintPath>$(RoundsFolder)\Rounds_Data\Managed\PhotonUnityNetworking.dll</HintPath>
-    </Reference>
-    <Reference Include="UnboundLib">
-      <HintPath>..\..\..\Visual Studio 2019\Projects\Rounds\Dependencies\UnboundLib.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro">
       <HintPath>$(RoundsFolder)\Rounds_Data\Managed\Unity.TextMeshPro.dll</HintPath>

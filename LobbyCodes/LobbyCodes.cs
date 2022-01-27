@@ -16,8 +16,9 @@ namespace LobbyCodes
     [BepInProcess("Rounds.exe")]
     public class LobbyCodes : BaseUnityPlugin
     {
-        private const string ModId = "com.rounds.LpbbyCodes";
+        private const string ModId = "com.roundsmoddingcommunity.rounds.LobbyCodes";
         private const string ModName = "Lobby Codes";
+        private readonly string CompatibilityModName = ModName.Replace(" ","");
         public const string Version = "1.0.0"; // What version are we on (major.minor.patch)?
 
         internal AssetBundle assets = null;
@@ -36,6 +37,8 @@ namespace LobbyCodes
             assets = AssetUtils.LoadAssetBundleFromResources("lobbycodes", typeof(LobbyCodes).Assembly);
             click = assets.LoadAllAssets<AudioClip>().ToList().Where(clip => clip.name.Contains("UI_Button_Click")).ToList();
             hover = assets.LoadAllAssets<AudioClip>().ToList().Where(clip => clip.name.Contains("UI_Button_Hover")).ToList();
+
+            JoinUI.Init();
 
             GameModeManager.AddHook(GameModeHooks.HookGameStart, GameStart);
         }
