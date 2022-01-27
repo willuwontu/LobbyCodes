@@ -109,6 +109,7 @@ namespace LobbyCodes.UI
                     var text = placeholderText.GetComponent<TextMeshProUGUI>();
                     text.text = "You shouldn't see this ...";
                     text.enableAutoSizing = true;
+                    text.alignment = TextAlignmentOptions.Right;
                 }
 
                 inputField.placeholder = placeholderText.GetComponent<TextMeshProUGUI>();
@@ -147,6 +148,7 @@ namespace LobbyCodes.UI
                     var text = inputText.GetComponent<TextMeshProUGUI>();
                     text.enableAutoSizing = true;
                     text.fontSizeMin = 2f;
+                    text.alignment = TextAlignmentOptions.Left;
                 }
 
                 inputField.textComponent = inputText.GetComponent<TextMeshProUGUI>();
