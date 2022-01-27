@@ -150,7 +150,8 @@ namespace LobbyCodes.UI
                 }
 
                 inputField.textComponent = inputText.GetComponent<TextMeshProUGUI>();
-                inputField.text = "@Pykess#5527";
+                inputField.text = "";
+                inputField.textComponent.color = new Color(0.9f, 0.9f, 0.9f, 0.8f);
 
                 inputField.onSelect.AddListener((str) => UnityEngine.Debug.Log($"{str}"));
 
@@ -193,6 +194,7 @@ namespace LobbyCodes.UI
 
                 var text = LobbyUI._text.GetComponent<TextMeshProUGUI>();
                 text.text = "Lobby Code:";
+                text.color = new Color(0.9f, 0.9f, 0.9f, 0.8f);
                 text.enableAutoSizing = true;
                 text.alignment = TextAlignmentOptions.Right;
 
@@ -246,7 +248,7 @@ namespace LobbyCodes.UI
 
                     image = icon.GetComponent<Image>();
                     image.sprite = clipboardIcon;
-                    image.color = new Color(1, 1, 1, 0.8f);
+                    image.color = new Color(0.9f, 0.9f, 0.9f, 0.8f);
                 }
 
                 return LobbyUI._copyButton;
