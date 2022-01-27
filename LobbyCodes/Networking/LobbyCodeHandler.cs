@@ -7,7 +7,8 @@ namespace LobbyCodes.Networking
 {
     public static class LobbyCodeHandler
     {
-        private readonly static string[] Regions = new string[] { "asia", "au", "cae", "cn", "eu", "in", "jp", "ru", "rue", "za", "sa", "kr", "tr", "us", "usw" };
+        public readonly static string[] Regions = new string[] { "asia", "au", "cae", "cn", "eu", "in", "jp", "ru", "rue", "za", "sa", "kr", "tr", "us", "usw" };
+
         private static string GetPureCode()
         {
             if (PhotonNetwork.OfflineMode || PhotonNetwork.CurrentRoom == null) { return ""; }
@@ -19,6 +20,8 @@ namespace LobbyCodes.Networking
         }
         private static ExitCode PureConnectToRoom(string pureCode)
         {
+            if (string.IsNullOrEmpty(pureCode)) { return ExitCode.Empty; }
+
             ExitCode exitCode = ExitCode.Success;
 
             try
@@ -48,14 +51,23 @@ namespace LobbyCodes.Networking
         }
         public static ExitCode ConnectToRoom(string obfuscatedCode)
         {
-            return PureConnectToRoom(ObfuscateJoinCode.DeObfuscate(obfuscatedCode));
+            if (string.IsNullOrEmpty(obfuscatedCode)) { return ExitCode.Empty; }
+            try
+            {
+                return PureConnectToRoom(ObfuscateJoinCode.DeObfuscate(obfuscatedCode));
+            }
+            catch
+            {
+                return ExitCode.Invalid;
+            }
         }
 
         public enum ExitCode
         {
             Success,
             Invalid,
-            UnknownError
+            UnknownError,
+            Empty
         }
 
     }
