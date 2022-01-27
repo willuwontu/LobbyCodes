@@ -19,7 +19,7 @@ namespace LobbyCodes.UI
                 if (LobbyUI._BG != null) { return LobbyUI._BG; }
 
                 LobbyUI._BG = new GameObject("LobbyCode", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(HorizontalLayoutGroup), typeof(ContentSizeFitter));
-                LobbyUI._BG.transform.parent = UnityEngine.GameObject.Find("/Game/UI/UI_Game/Canvas/").transform;
+                LobbyUI._BG.transform.SetParent(UnityEngine.GameObject.Find("/Game/UI/UI_Game/Canvas/").transform);
 
                 // We want to dock it in the top right corner
                 var rect = LobbyUI._BG.GetComponent<RectTransform>();
@@ -68,8 +68,12 @@ namespace LobbyCodes.UI
                 // Get BG to make sure it exists.
                 GameObject _ = LobbyUI.BG;
 
+                GameObject localGo = UnityEngine.GameObject.Find("/Game/UI/UI_MainMenu/Canvas/ListSelector/Main/Group/Local/Text");
+                var font = localGo.GetComponent<TextMeshProUGUI>().font;
+                var fontMaterials = localGo.GetComponent<TextMeshProUGUI>().fontMaterials;
+
                 LobbyUI._input = new GameObject("LobbyCodeInput", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(TMP_InputField));
-                LobbyUI._input.transform.parent = LobbyUI.BG.transform;
+                LobbyUI._input.transform.SetParent(LobbyUI.BG.transform);
 
                 TMP_InputField inputField = LobbyUI._input.GetComponent<TMP_InputField>();
                 inputField.readOnly = true;
@@ -82,7 +86,7 @@ namespace LobbyCodes.UI
                 image.color = new Color(0, 0, 0, 0.1f);
 
                 var textView = new GameObject("Text Area", typeof(RectTransform), typeof(RectMask2D));
-                textView.transform.parent = LobbyUI._input.transform;
+                textView.transform.SetParent(LobbyUI._input.transform);
                 {
                     rect = textView.GetComponent<RectTransform>();
                     rect.localScale = new Vector3(1, 1, 1);
@@ -96,7 +100,7 @@ namespace LobbyCodes.UI
                 inputField.textViewport = rect;
 
                 var placeholderText = new GameObject("Placeholder", typeof(RectTransform), typeof(CanvasRenderer), typeof(TextMeshProUGUI));
-                placeholderText.transform.parent = textView.transform;
+                placeholderText.transform.SetParent(textView.transform);
                 {
                     rect = placeholderText.GetComponent<RectTransform>();
                     rect.localScale = new Vector3(1, 1, 1);
@@ -107,6 +111,11 @@ namespace LobbyCodes.UI
                     rect.offsetMax = new Vector2(0, 0);
 
                     var text = placeholderText.GetComponent<TextMeshProUGUI>();
+                    if (localGo)
+                    {
+                        text.font = font;
+                        text.fontMaterials = fontMaterials;
+                    }
                     text.text = "You shouldn't see this ...";
                     text.enableAutoSizing = true;
                     text.alignment = TextAlignmentOptions.Right;
@@ -115,7 +124,7 @@ namespace LobbyCodes.UI
                 inputField.placeholder = placeholderText.GetComponent<TextMeshProUGUI>();
 
                 var inputText = new GameObject("Input Text", typeof(RectTransform), typeof(CanvasRenderer), typeof(TextMeshProUGUI));
-                inputText.transform.parent = textView.transform;
+                inputText.transform.SetParent(textView.transform);
                 {
                     rect = inputText.GetComponent<RectTransform>();
                     rect.localScale = new Vector3(1, 1, 1);
@@ -146,6 +155,11 @@ namespace LobbyCodes.UI
                     });
 
                     var text = inputText.GetComponent<TextMeshProUGUI>();
+                    if (localGo)
+                    {
+                        text.font = font;
+                        text.fontMaterials = fontMaterials;
+                    }
                     text.enableAutoSizing = true;
                     text.fontSizeMin = 2f;
                     text.alignment = TextAlignmentOptions.Right;
@@ -157,6 +171,7 @@ namespace LobbyCodes.UI
 
                 inputField.onSelect.AddListener((str) => UnityEngine.Debug.Log($"{str}"));
 
+                // Blip the input field to make it recognize that we've hooked things up now.
                 LobbyCodes.instance.ExecuteAfterFrames(5, () =>
                 { 
                     LobbyUI.input.SetActive(false);
@@ -169,7 +184,7 @@ namespace LobbyCodes.UI
 
                 rect = LobbyUI._input.GetComponent<RectTransform>();
                 rect.pivot = new Vector2(0.5f, 0.5f);
-                rect.sizeDelta = new Vector2(280, 80);
+                rect.sizeDelta = new Vector2(300, 80);
 
                 return LobbyUI._input;
             }
@@ -186,8 +201,12 @@ namespace LobbyCodes.UI
                 // Get BG to make sure it exists.
                 GameObject _ = LobbyUI.BG;
 
+                GameObject localGo = UnityEngine.GameObject.Find("/Game/UI/UI_MainMenu/Canvas/ListSelector/Main/Group/Local/Text");
+                var font = localGo.GetComponent<TextMeshProUGUI>().font;
+                var fontMaterials = localGo.GetComponent<TextMeshProUGUI>().fontMaterials;
+
                 LobbyUI._text = new GameObject("Text", typeof(RectTransform), typeof(CanvasRenderer), typeof(TextMeshProUGUI));
-                LobbyUI._text.transform.parent = LobbyUI.BG.transform;
+                LobbyUI._text.transform.SetParent(LobbyUI.BG.transform);
 
                 RectTransform rect = LobbyUI._text.GetComponent<RectTransform>();
                 rect.localScale = new Vector3(1, 1, 1);
@@ -195,6 +214,11 @@ namespace LobbyCodes.UI
                 rect.sizeDelta = new Vector2(200, 80);
 
                 var text = LobbyUI._text.GetComponent<TextMeshProUGUI>();
+                if (localGo)
+                {
+                    text.font = font;
+                    text.fontMaterials = fontMaterials;
+                }
                 text.text = "Lobby Code:";
                 text.color = new Color(0.9f, 0.9f, 0.9f, 0.8f);
                 text.enableAutoSizing = true;
@@ -221,7 +245,7 @@ namespace LobbyCodes.UI
 
                 // The button object.
                 LobbyUI._copyButton = new GameObject("Copy Button", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(Button));
-                LobbyUI._copyButton.transform.parent = LobbyUI.BG.transform;
+                LobbyUI._copyButton.transform.SetParent(LobbyUI.BG.transform);
 
                 RectTransform rect = LobbyUI._copyButton.GetComponent<RectTransform>();
                 rect.localScale = new Vector3(1, 1, 1);
@@ -240,7 +264,7 @@ namespace LobbyCodes.UI
                 interact.mouseClick.AddListener(() => input.GetComponent<TMP_InputField>().text.CopyToClipboard());
 
                 var icon = new GameObject("Icon", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
-                icon.transform.parent = LobbyUI._copyButton.transform;
+                icon.transform.SetParent(LobbyUI._copyButton.transform);
                 {
                     rect = icon.GetComponent<RectTransform>();
                     rect.localScale = new Vector3(1, 1, 1);
