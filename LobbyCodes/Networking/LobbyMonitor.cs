@@ -19,6 +19,7 @@ namespace LobbyCodes.Networking
         {
             LobbyUI.BG.SetActive(true);
             LobbyUI.UpdateLobbyCode("Code");
+            LobbyCodes.instance.ExecuteAfterSeconds(5f, () => LobbyUI.BG.transform.SetAsLastSibling());
         }
 
         public override void OnLeftRoom()

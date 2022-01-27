@@ -154,6 +154,16 @@ namespace LobbyCodes.UI
 
                 inputField.onSelect.AddListener((str) => UnityEngine.Debug.Log($"{str}"));
 
+                LobbyCodes.instance.ExecuteAfterFrames(5, () =>
+                { 
+                    LobbyUI.input.SetActive(false);
+                    LobbyCodes.instance.ExecuteAfterFrames(5, () =>
+                    {
+                        LobbyUI.input.SetActive(true);
+                    });
+                });
+
+
                 rect = LobbyUI._input.GetComponent<RectTransform>();
                 rect.pivot = new Vector2(0.5f, 0.5f);
                 rect.sizeDelta = new Vector2(280, 80);
