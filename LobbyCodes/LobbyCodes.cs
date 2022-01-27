@@ -1,10 +1,12 @@
 ﻿using System;
-using System.Reflection;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using BepInEx;
-using UnboundLib;
+using UnboundLib.GameModes;
 using UnityEngine;
-using UnityEngine.UI;
 using Jotunn.Utils;
+using LobbyCodes.Networking;
 using LobbyCodes.UI;
 
 namespace LobbyCodes
@@ -19,7 +21,10 @@ namespace LobbyCodes
         private readonly string CompatibilityModName = ModName.Replace(" ","");
         public const string Version = "1.0.0"; // What version are we on (major.minor.patch)?
 
-        AssetBundle assets;
+        internal AssetBundle assets = null;
+
+        public List<AudioClip> click;
+        public List<AudioClip> hover;
 
         public static LobbyCodes instance { get; private set; }
 
@@ -27,10 +32,22 @@ namespace LobbyCodes
         {
             instance = this;
 
+            this.gameObject.AddComponent<LobbyMonitor>();
+
             assets = AssetUtils.LoadAssetBundleFromResources("lobbycodes", typeof(LobbyCodes).Assembly);
+            click = assets.LoadAllAssets<AudioClip>().ToList().Where(clip => clip.name.Contains("UI_Button_Click")).ToList();
+            hover = assets.LoadAllAssets<AudioClip>().ToList().Where(clip => clip.name.Contains("UI_Button_Hover")).ToList();
 
             JoinUI.Init();
 
+            GameModeManager.AddHook(GameModeHooks.HookGameStart, GameStart);
+        }
+
+        private IEnumerator GameStart(IGameModeHandler gm)
+        {
+            LobbyUI.BG.SetActive(false);
+
+            yield break;
         }
     }
 }
