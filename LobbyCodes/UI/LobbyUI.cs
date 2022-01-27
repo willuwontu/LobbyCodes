@@ -52,6 +52,11 @@ namespace LobbyCodes.UI
             }
         }
 
+        public static void UpdateLobbyCode(string code)
+        {
+            LobbyUI.input.GetComponent<TMP_InputField>().text = code;
+        }
+
         private static GameObject _input = null;
 
         public static GameObject input
@@ -141,10 +146,13 @@ namespace LobbyCodes.UI
 
                     var text = inputText.GetComponent<TextMeshProUGUI>();
                     text.enableAutoSizing = true;
+                    text.fontSizeMin = 2f;
                 }
 
                 inputField.textComponent = inputText.GetComponent<TextMeshProUGUI>();
                 inputField.text = "@Pykess#5527";
+
+                inputField.onSelect.AddListener((str) => UnityEngine.Debug.Log($"{str}"));
 
                 rect = LobbyUI._input.GetComponent<RectTransform>();
                 rect.pivot = new Vector2(0.5f, 0.5f);

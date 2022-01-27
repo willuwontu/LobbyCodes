@@ -18,6 +18,7 @@ namespace LobbyCodes.Networking
         public override void OnJoinedRoom()
         {
             LobbyUI.BG.SetActive(true);
+            LobbyUI.UpdateLobbyCode("Code");
         }
 
         public override void OnLeftRoom()
