@@ -5,6 +5,7 @@ using UnboundLib;
 using UnityEngine;
 using UnityEngine.UI;
 using Jotunn.Utils;
+using LobbyCodes.UI;
 
 namespace LobbyCodes
 {
@@ -15,6 +16,7 @@ namespace LobbyCodes
     {
         private const string ModId = "com.roundsmoddingcommunity.rounds.LobbyCodes";
         private const string ModName = "Lobby Codes";
+        private readonly string CompatibilityModName = ModName.Replace(" ","");
         public const string Version = "1.0.0"; // What version are we on (major.minor.patch)?
 
         AssetBundle assets;
@@ -26,6 +28,9 @@ namespace LobbyCodes
             instance = this;
 
             assets = AssetUtils.LoadAssetBundleFromResources("lobbycodes", typeof(LobbyCodes).Assembly);
+
+            JoinUI.Init();
+
         }
     }
 }
