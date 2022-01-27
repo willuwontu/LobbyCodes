@@ -300,6 +300,8 @@ namespace LobbyCodes.UI
                 button.targetGraphic = image;
                 button.image = image;
 
+                _ = LobbyUI.popover;
+
                 var interact = LobbyUI._copyButton.AddComponent<ButtonInteraction>();
                 interact.mouseClick.AddListener(() => 
                 { 
@@ -439,7 +441,6 @@ namespace LobbyCodes.UI
             LobbyUI.text.transform.SetSiblingIndex(0);
             LobbyUI.input.transform.SetSiblingIndex(1);
             LobbyUI.copyButton.transform.SetSiblingIndex(2);
-            GameObject _ = LobbyUI.popover;
         }
 
         private class BringBGToTop : MonoBehaviour
