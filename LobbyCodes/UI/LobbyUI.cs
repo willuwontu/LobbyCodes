@@ -41,7 +41,7 @@ namespace LobbyCodes.UI
                 rect.anchorMin = new Vector2(1, 1);
                 rect.anchorMax = new Vector2(1, 1);
                 rect.pivot = new Vector2(1, 1);
-                rect.offsetMax = new Vector2(-10, -10);
+                rect.offsetMax = new Vector2(-10, -40);
                 rect.sizeDelta = new Vector2(380, 75);
 
                 var image = LobbyUI._BG.GetComponent<Image>();
@@ -275,7 +275,11 @@ namespace LobbyCodes.UI
                 button.image = image;
 
                 var interact = LobbyUI._copyButton.AddComponent<ButtonInteraction>();
-                interact.mouseClick.AddListener(() => input.GetComponent<TMP_InputField>().text.CopyToClipboard());
+                interact.mouseClick.AddListener(() => 
+                { 
+                    input.GetComponent<TMP_InputField>().text.CopyToClipboard();
+                    LobbyUI.popover.GetComponent<FadePopover>().Go();
+                });
 
                 var icon = new GameObject("Icon", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
                 icon.transform.SetParent(LobbyUI._copyButton.transform);
@@ -318,15 +322,15 @@ namespace LobbyCodes.UI
                 RectTransform rect = LobbyUI._popover.GetComponent<RectTransform>();
                 {
                     rect.localScale = new Vector3(1, 1, 1);
-                    rect.anchorMin = new Vector2(0.5f, 0.5f);
-                    rect.anchorMax = new Vector2(0.5f, 0.5f);
+                    rect.anchorMin = new Vector2(0.5f, 0.9f);
+                    rect.anchorMax = new Vector2(0.5f, 0.9f);
                     rect.pivot = new Vector2(0.5f, 0f);
-                    rect.sizeDelta = new Vector2(80, 40);
+                    rect.sizeDelta = new Vector2(80, 50);
                 }
 
-                var image = popover.GetComponent<Image>();
+                var image = LobbyUI._popover.GetComponent<Image>();
                 image.sprite = popoverIcon;
-                image.color = new Color(0.15f, 0.15f, 0.15f, 0.7f);
+                image.color = new Color(0.25f, 0.25f, 0.25f, 0.8f);
 
                 var textobj = new GameObject("Text", typeof(RectTransform), typeof(CanvasRenderer), typeof(TextMeshProUGUI));
                 textobj.transform.SetParent(LobbyUI._popover.transform);
@@ -337,17 +341,79 @@ namespace LobbyCodes.UI
                     rect.anchorMin = new Vector2(0f, 0f);
                     rect.anchorMax = new Vector2(1f, 1f);
                     rect.offsetMax = new Vector2(-5f, -5f);
-                    rect.offsetMin = new Vector2(5f, 2);
+                    rect.offsetMin = new Vector2(5f, 5);
                 }
+
+                var text = textobj.GetComponent<TextMeshProUGUI>();
+                text.font = font;
+                text.fontMaterials = fontMaterials;
+                text.text = "Copied";
+                text.enableAutoSizing = true;
+                text.color = new Color(1, 1, 1, 0.8f);
+
+                var fade = LobbyUI._popover.AddComponent<FadePopover>();
+                fade.text = text;
+                fade.image = image;
+
+                LobbyUI._popover.SetActive(false);
 
                 return LobbyUI._popover;
             }
         }
+
+        private class FadePopover : MonoBehaviour
+        {
+            Coroutine fadeCoroutine = null;
+            float fadeDuration = 0.5f;
+            internal TextMeshProUGUI text = null;
+            internal Image image = null;
+
+            internal void Go()
+            {
+                if (fadeCoroutine != null)
+                {
+                    LobbyCodes.instance.StopCoroutine(fadeCoroutine);
+                }
+
+                LobbyUI.popover.SetActive(true);
+                ResetColors();
+
+                fadeCoroutine = LobbyCodes.instance.StartCoroutine(FadePopup());
+            }
+
+            private IEnumerator FadePopup()
+            {
+                yield return new WaitForSecondsRealtime(1.25f);
+
+                var timeremaining = fadeDuration;
+
+                while (timeremaining > 0f)
+                {
+                    image.color = new Color(0.25f, 0.25f, 0.25f, 0.8f * timeremaining/ fadeDuration);
+                    text.color = new Color(1, 1, 1, 0.8f * timeremaining / fadeDuration);
+
+                    timeremaining -= Time.deltaTime;
+                    yield return null;
+                }
+                LobbyUI.popover.SetActive(false);
+                ResetColors();
+
+                yield break;
+            }
+
+            private void ResetColors()
+            {
+                image.color = new Color(0.25f, 0.25f, 0.25f, 0.8f);
+                text.color = new Color(1, 1, 1, 0.8f);
+            }
+        }
+
         private static void SortChildren()
         {
             LobbyUI.text.transform.SetSiblingIndex(0);
             LobbyUI.input.transform.SetSiblingIndex(1);
             LobbyUI.copyButton.transform.SetSiblingIndex(2);
+            GameObject _ = LobbyUI.popover;
         }
 
         private class BringBGToTop : MonoBehaviour
