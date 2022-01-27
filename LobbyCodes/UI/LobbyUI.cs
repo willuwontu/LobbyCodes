@@ -148,7 +148,7 @@ namespace LobbyCodes.UI
                     var text = inputText.GetComponent<TextMeshProUGUI>();
                     text.enableAutoSizing = true;
                     text.fontSizeMin = 2f;
-                    text.alignment = TextAlignmentOptions.Left;
+                    text.alignment = TextAlignmentOptions.Right;
                 }
 
                 inputField.textComponent = inputText.GetComponent<TextMeshProUGUI>();
