@@ -297,6 +297,52 @@ namespace LobbyCodes.UI
             }
         }
 
+        private static GameObject _popover = null;
+
+        private static GameObject popover
+        {
+            get
+            {
+                if (LobbyUI._popover != null) { return LobbyUI._popover; }
+
+                Sprite popoverIcon = LobbyCodes.instance.assets.LoadAsset<Sprite>("Popover4");
+                GameObject localGo = UnityEngine.GameObject.Find("/Game/UI/UI_MainMenu/Canvas/ListSelector/Main/Group/Local/Text");
+                var font = localGo.GetComponent<TextMeshProUGUI>().font;
+                var fontMaterials = localGo.GetComponent<TextMeshProUGUI>().fontMaterials;
+
+                // Get BG to make sure it exists.
+                GameObject _ = LobbyUI.BG;
+
+                LobbyUI._popover = new GameObject("Copy Popover", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+                LobbyUI._popover.transform.SetParent(LobbyUI.copyButton.transform);
+                RectTransform rect = LobbyUI._popover.GetComponent<RectTransform>();
+                {
+                    rect.localScale = new Vector3(1, 1, 1);
+                    rect.anchorMin = new Vector2(0.5f, 0.5f);
+                    rect.anchorMax = new Vector2(0.5f, 0.5f);
+                    rect.pivot = new Vector2(0.5f, 0f);
+                    rect.sizeDelta = new Vector2(80, 40);
+                }
+
+                var image = popover.GetComponent<Image>();
+                image.sprite = popoverIcon;
+                image.color = new Color(0.15f, 0.15f, 0.15f, 0.7f);
+
+                var textobj = new GameObject("Text", typeof(RectTransform), typeof(CanvasRenderer), typeof(TextMeshProUGUI));
+                textobj.transform.SetParent(LobbyUI._popover.transform);
+
+                rect = textobj.GetComponent<RectTransform>();
+                {
+                    rect.localScale = new Vector3(1, 1, 1);
+                    rect.anchorMin = new Vector2(0f, 0f);
+                    rect.anchorMax = new Vector2(1f, 1f);
+                    rect.offsetMax = new Vector2(-5f, -5f);
+                    rect.offsetMin = new Vector2(5f, 2);
+                }
+
+                return LobbyUI._popover;
+            }
+        }
         private static void SortChildren()
         {
             LobbyUI.text.transform.SetSiblingIndex(0);
