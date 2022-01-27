@@ -344,7 +344,7 @@ namespace LobbyCodes.UI
                 GameObject _ = LobbyUI.BG;
 
                 LobbyUI._popover = new GameObject("Copy Popover", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
-                LobbyUI._popover.transform.SetParent(LobbyUI.copyButton.transform);
+                LobbyUI._popover.transform.SetParent(LobbyUI._copyButton.transform);
                 RectTransform rect = LobbyUI._popover.GetComponent<RectTransform>();
                 {
                     rect.localScale = new Vector3(1, 1, 1);
@@ -440,7 +440,6 @@ namespace LobbyCodes.UI
             LobbyUI.input.transform.SetSiblingIndex(1);
             LobbyUI.copyButton.transform.SetSiblingIndex(2);
             GameObject _ = LobbyUI.popover;
-            _ = LobbyUI.kicklist;
         }
 
         private class BringBGToTop : MonoBehaviour
