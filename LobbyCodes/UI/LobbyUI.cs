@@ -10,6 +10,12 @@ namespace LobbyCodes.UI
 {
     public class LobbyUI
     {
+
+        internal static void UpdateStreamerModeSettings()
+        {
+            LobbyUI.input.SetActive(!LobbyCodes.StreamerMode);
+        }
+
         private static GameObject _BG = null;
 
         public static GameObject BG
@@ -177,7 +183,7 @@ namespace LobbyCodes.UI
                     LobbyUI.input.SetActive(false);
                     LobbyCodes.instance.ExecuteAfterFrames(5, () =>
                     {
-                        LobbyUI.input.SetActive(true);
+                        LobbyUI.input.SetActive(!LobbyCodes.StreamerMode);
                     });
                 });
 

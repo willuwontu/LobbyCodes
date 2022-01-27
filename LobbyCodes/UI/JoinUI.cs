@@ -12,13 +12,26 @@ namespace LobbyCodes.UI
     {
         static string currentCode = "";
         internal static TextMeshProUGUI StreamerModeText;
+        internal static TMP_InputField LobbyInputField;
+
+        internal static void UpdateStreamerModeSettings()
+        {
+            StreamerModeText.text = LobbyCodes.StreamerMode ? "STREAMER MODE ENABLED" : "";
+            LobbyInputField.readOnly = LobbyCodes.StreamerMode;
+            ((TextMeshProUGUI)LobbyInputField.placeholder).text = LobbyCodes.StreamerMode ? "COPY CODE TO CLIPBOARD THEN PRESS JOIN" : "ENTER LOBBY CODE";
+        }
+
         static void SetupUI(bool firstTime)
         {
             Unbound.Instance.ExecuteAfterSeconds(firstTime ? 0.2f : 0f, () =>
             {
                 var onlineGo = GameObject.Find("/Game/UI/UI_MainMenu/Canvas/ListSelector/Online");
-                var spaceGo = onlineGo?.transform?.Find("Space")?.transform;
-                var inviteGo = onlineGo?.transform?.Find("Invite friend")?.transform;
+                var spaceGo = onlineGo?.transform?.Find("Group/Space")?.transform;
+                var inviteGo = onlineGo?.transform?.Find("Group/Invite friend")?.transform;
+                if (inviteGo != null)
+                {
+                    inviteGo.gameObject.GetComponentInChildren<TextMeshProUGUI>().text = "CREATE LOBBY";
+                }
                 int siblingIndex = spaceGo != null ? spaceGo.GetSiblingIndex() + 1 : inviteGo != null ? inviteGo.GetSiblingIndex() : 4;
                 var joinMenu = MenuHandler.CreateMenu("JOIN LOBBY", () => { }, onlineGo.gameObject, 60, true, false, null, true, siblingIndex);
                 MenuHandler.CreateText("ENTER LOBBY CODE", joinMenu, out var _);
@@ -26,8 +39,11 @@ namespace LobbyCodes.UI
                 StreamerModeText.fontStyle = FontStyles.Bold;
                 MenuHandler.CreateText(" ", joinMenu, out TextMeshProUGUI status, 30, color: Color.red);
                 MenuHandler.CreateText(" ", joinMenu, out TextMeshProUGUI _, 30);
-                var inputField = MenuHandler.CreateInputField("LOBBY CODE", 60, joinMenu, (string str) => JoinUI.currentCode = str);
+                var inputField = MenuHandler.CreateInputField(LobbyCodes.StreamerMode ? "COPY CODE TO CLIPBOARD THEN PRESS JOIN" : "ENTER LOBBY CODE", 60, joinMenu, (string str) => JoinUI.currentCode = str);
                 inputField.transform.localScale = 2f * Vector3.one;
+                LobbyInputField = inputField.GetComponentInChildren<TMP_InputField>();
+                LobbyInputField.readOnly = LobbyCodes.StreamerMode;
+                ((TextMeshProUGUI)LobbyInputField.placeholder).text = LobbyCodes.StreamerMode ? "COPY CODE TO CLIPBOARD THEN PRESS JOIN" : "ENTER LOBBY CODE";
                 foreach (TMP_Text text in inputField.GetComponentsInChildren<TMP_Text>())
                 {
                     text.alignment = TextAlignmentOptions.Center;
@@ -35,7 +51,12 @@ namespace LobbyCodes.UI
                 MenuHandler.CreateText(" ", joinMenu, out TextMeshProUGUI _, 30);
                 void DoConnect()
                 {
-                    LobbyCodeHandler.ExitCode exit = LobbyCodeHandler.ConnectToRoom(JoinUI.currentCode);
+                    string code = JoinUI.currentCode;
+                    if (string.IsNullOrEmpty(code))
+                    {
+                        code = ClipboardExtension.ReadFromClipboard();
+                    }
+                    LobbyCodeHandler.ExitCode exit = LobbyCodeHandler.ConnectToRoom(code);
                     switch (exit)
                     {
                         case LobbyCodeHandler.ExitCode.Success:

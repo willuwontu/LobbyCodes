@@ -83,7 +83,7 @@ namespace LobbyCodes
         {
             MenuHandler.CreateText(ModName, menu, out var _);
             MenuHandler.CreateText(" ", menu, out var _, 30);
-            MenuHandler.CreateToggle(StreamerMode, "Enable Streamer Mode", menu, (bool val) => { StreamerMode = val; JoinUI.StreamerModeText.text = val ? "STREAMER MODE ENABLED" : ""; });
+            MenuHandler.CreateToggle(StreamerMode, "Enable Streamer Mode", menu, (bool val) => { StreamerMode = val; JoinUI.UpdateStreamerModeSettings(); LobbyUI.UpdateStreamerModeSettings(); });
         }
     }
 }
