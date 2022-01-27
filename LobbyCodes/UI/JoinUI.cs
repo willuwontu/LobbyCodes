@@ -11,6 +11,7 @@ namespace LobbyCodes.UI
     static class JoinUI
     {
         static string currentCode = "";
+        internal static TextMeshProUGUI StreamerModeText;
         static void SetupUI(bool firstTime)
         {
             Unbound.Instance.ExecuteAfterSeconds(firstTime ? 0.2f : 0f, () =>
@@ -21,6 +22,8 @@ namespace LobbyCodes.UI
                 int siblingIndex = spaceGo != null ? spaceGo.GetSiblingIndex() + 1 : inviteGo != null ? inviteGo.GetSiblingIndex() : 4;
                 var joinMenu = MenuHandler.CreateMenu("JOIN LOBBY", () => { }, onlineGo.gameObject, 60, true, false, null, true, siblingIndex);
                 MenuHandler.CreateText("ENTER LOBBY CODE", joinMenu, out var _);
+                MenuHandler.CreateText(LobbyCodes.StreamerMode ? "STREAMER MODE ENABLED" : "", joinMenu, out StreamerModeText, 30, color: new Color32(145, 70, 255, 255));
+                StreamerModeText.fontStyle = FontStyles.Bold;
                 MenuHandler.CreateText(" ", joinMenu, out TextMeshProUGUI status, 30, color: Color.red);
                 MenuHandler.CreateText(" ", joinMenu, out TextMeshProUGUI _, 30);
                 var inputField = MenuHandler.CreateInputField("LOBBY CODE", 60, joinMenu, (string str) => JoinUI.currentCode = str);
