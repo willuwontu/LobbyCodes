@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using UnboundLib;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,14 +13,27 @@ namespace LobbyCodes.UI
     {
         private static GameObject _BG = null;
 
+        private static GameObject uiCanvas
+        {
+            get
+            {
+                return UnityEngine.GameObject.Find("/Game/UI/UI_MainMenu/Canvas/");
+            }
+        }
+
         public static GameObject BG
         {
             get
             {
+                if (!uiCanvas.GetComponent<BringBGToTop>())
+                {
+                    uiCanvas.AddComponent<BringBGToTop>();
+                }
+
                 if (LobbyUI._BG != null) { return LobbyUI._BG; }
 
                 LobbyUI._BG = new GameObject("LobbyCode", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(HorizontalLayoutGroup), typeof(ContentSizeFitter));
-                LobbyUI._BG.transform.SetParent(UnityEngine.GameObject.Find("/Game/UI/UI_Game/Canvas/").transform);
+                LobbyUI._BG.transform.SetParent(uiCanvas.transform);
 
                 // We want to dock it in the top right corner
                 var rect = LobbyUI._BG.GetComponent<RectTransform>();
@@ -72,7 +86,7 @@ namespace LobbyCodes.UI
                 var font = localGo.GetComponent<TextMeshProUGUI>().font;
                 var fontMaterials = localGo.GetComponent<TextMeshProUGUI>().fontMaterials;
 
-                LobbyUI._input = new GameObject("LobbyCodeInput", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(TMP_InputField));
+                LobbyUI._input = new GameObject("LobbyCode Input", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(TMP_InputField));
                 LobbyUI._input.transform.SetParent(LobbyUI.BG.transform);
 
                 TMP_InputField inputField = LobbyUI._input.GetComponent<TMP_InputField>();
@@ -288,6 +302,14 @@ namespace LobbyCodes.UI
             LobbyUI.text.transform.SetSiblingIndex(0);
             LobbyUI.input.transform.SetSiblingIndex(1);
             LobbyUI.copyButton.transform.SetSiblingIndex(2);
+        }
+
+        private class BringBGToTop : MonoBehaviour
+        {
+            private void OnTransformChildrenChanged()
+            {
+                this.ExecuteAfterFrames(1, () => LobbyUI.BG.transform.SetAsLastSibling());
+            }
         }
 
         private class ButtonInteraction : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
