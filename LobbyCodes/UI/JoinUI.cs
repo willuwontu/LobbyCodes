@@ -22,7 +22,14 @@ namespace LobbyCodes.UI
                 var joinMenu = MenuHandler.CreateMenu("JOIN LOBBY", () => { }, onlineGo.gameObject, 60, true, false, null, true, siblingIndex);
                 MenuHandler.CreateText("ENTER LOBBY CODE", joinMenu, out var _);
                 MenuHandler.CreateText(" ", joinMenu, out TextMeshProUGUI status, 30, color: Color.red);
-                MenuHandler.CreateInputField("", 60, joinMenu, (string str) => JoinUI.currentCode = str);
+                MenuHandler.CreateText(" ", joinMenu, out TextMeshProUGUI _, 30);
+                var inputField = MenuHandler.CreateInputField("LOBBY CODE", 60, joinMenu, (string str) => JoinUI.currentCode = str);
+                inputField.transform.localScale = 2f * Vector3.one;
+                foreach (TMP_Text text in inputField.GetComponentsInChildren<TMP_Text>())
+                {
+                    text.alignment = TextAlignmentOptions.Center;
+                }
+                MenuHandler.CreateText(" ", joinMenu, out TextMeshProUGUI _, 30);
                 void DoConnect()
                 {
                     LobbyCodeHandler.ExitCode exit = LobbyCodeHandler.ConnectToRoom(JoinUI.currentCode);
@@ -32,10 +39,13 @@ namespace LobbyCodes.UI
                             status.text = " ";
                             break;
                         case LobbyCodeHandler.ExitCode.Invalid:
-                            status.text = "<size=75%>INVALID CODE</size>";
+                            status.text = "INVALID CODE";
                             break;
                         case LobbyCodeHandler.ExitCode.UnknownError:
-                            status.text = "<size=75%>UNKNOWN ERROR</size>";
+                            status.text = "UNKNOWN ERROR";
+                            break;
+                        case LobbyCodeHandler.ExitCode.Empty:
+                            status.text = " ";
                             break;
                         default:
                             status.text = " ";

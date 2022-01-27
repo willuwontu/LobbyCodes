@@ -195,7 +195,7 @@ namespace LobbyCodes.UI
                 rect.sizeDelta = new Vector2(200, 80);
 
                 var text = LobbyUI._text.GetComponent<TextMeshProUGUI>();
-                text.text = "Lobby Code:";
+                text.text = "";
                 text.color = new Color(0.9f, 0.9f, 0.9f, 0.8f);
                 text.enableAutoSizing = true;
                 text.alignment = TextAlignmentOptions.Right;
