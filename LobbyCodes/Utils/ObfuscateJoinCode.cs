@@ -23,11 +23,13 @@ namespace LobbyCodes.Utils
 
         private static int GetRegionNumber(string region)
         {
-            return LobbyCodeHandler.Regions.Length * UnityEngine.Random.Range(0, LobbyCodeHandler.Regions.Length) + Array.IndexOf(LobbyCodeHandler.Regions, region); 
+            LobbyCodes.Log("REGION: " + region);
+            return LobbyCodeHandler.CodePrefix.Length * UnityEngine.Random.Range(0, LobbyCodeHandler.CodePrefix.Length) + Array.IndexOf(LobbyCodeHandler.CodePrefix, region); 
         }
         private static string GetRegionCode(int region)
         {
-            return LobbyCodeHandler.Regions[mod(region, LobbyCodeHandler.Regions.Length)];
+            LobbyCodes.Log("REGION NUMBER: " + region.ToString());
+            return LobbyCodeHandler.CodePrefix[mod(region, LobbyCodeHandler.CodePrefix.Length)];
         }
         public static string LongToBase(long value)
         {
@@ -82,6 +84,10 @@ namespace LobbyCodes.Utils
 
             // split into region + room number
             string[] reg_room = code.Split(Delimeters);
+            if (reg_room.Count() != 2)
+            {
+                throw new FormatException();
+            }
             string regionLong = reg_room[0];
             string roomLong = reg_room[1];
             // convert both back to decimal

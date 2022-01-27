@@ -9,4 +9,8 @@ public static class ClipboardExtension
     {
         GUIUtility.systemCopyBuffer = str;
     }
+    public static string ReadFromClipboard()
+    {
+        return GUIUtility.systemCopyBuffer;
+    }
 }

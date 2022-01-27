@@ -28,6 +28,17 @@ namespace LobbyCodes
 
         public static LobbyCodes instance { get; private set; }
 
+#if DEBUG
+        internal static bool DEBUG = true;
+#else
+        internal static bool DEBUG = false;
+#endif
+
+        internal static void Log(object message)
+        {
+            if (DEBUG) { UnityEngine.Debug.Log($"[{ModName}] {message}"); }
+        }
+
         void Start()
         {
             instance = this;

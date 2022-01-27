@@ -155,7 +155,7 @@ namespace LobbyCodes.UI
                 inputField.text = "";
                 inputField.textComponent.color = new Color(0.9f, 0.9f, 0.9f, 0.8f);
 
-                inputField.onSelect.AddListener((str) => UnityEngine.Debug.Log($"{str}"));
+                inputField.onSelect.AddListener((str) => LobbyCodes.Log($"{str}"));
 
                 LobbyCodes.instance.ExecuteAfterFrames(5, () =>
                 { 
