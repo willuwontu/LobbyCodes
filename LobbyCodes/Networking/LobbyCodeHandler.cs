@@ -1,15 +1,13 @@
 ﻿using Photon.Pun;
-using Photon.Realtime;
-using UnityEngine;
 using LobbyCodes.Utils;
-using UnboundLib;
 using System;
-using System.Text;
+using System.Linq;
 
 namespace LobbyCodes.Networking
 {
     public static class LobbyCodeHandler
     {
+        private readonly static string[] Regions = new string[] { "asia", "au", "cae", "cn", "eu", "in", "jp", "ru", "rue", "za", "sa", "kr", "tr", "us", "usw" };
         private static string GetPureCode()
         {
             if (PhotonNetwork.OfflineMode || PhotonNetwork.CurrentRoom == null) { return ""; }
@@ -19,16 +17,45 @@ namespace LobbyCodes.Networking
         {
             return ObfuscateJoinCode.Obfuscate(GetPureCode());
         }
-        private static void PureConnectToRoom(string pureCode)
+        private static ExitCode PureConnectToRoom(string pureCode)
         {
-            string[] reg_room = pureCode.Split(':');
-            string region = reg_room[0];
-            string room = reg_room[1];
-            NetworkConnectionHandler.instance.ForceRegionJoin(region, room);
+            ExitCode exitCode = ExitCode.Success;
+
+            try
+            {
+                string[] reg_room = pureCode.Split(':');
+                string region = reg_room[0];
+                string room = reg_room[1];
+                if (!Regions.Contains(region) || !room.All(char.IsDigit))
+                {
+                    throw new FormatException();
+                }
+                NetworkConnectionHandler.instance.ForceRegionJoin(region, room);
+            }
+            catch (IndexOutOfRangeException)
+            {
+                exitCode = ExitCode.Invalid;
+            }
+            catch (FormatException)
+            {
+                exitCode = ExitCode.Invalid;
+            }
+            catch (Exception)
+            {
+                exitCode = ExitCode.UnknownError;
+            }
+            return exitCode;
         }
-        public static void ConnectToRoom(string obfuscatedCode)
+        public static ExitCode ConnectToRoom(string obfuscatedCode)
         {
-            PureConnectToRoom(ObfuscateJoinCode.DeObfuscate(obfuscatedCode));
+            return PureConnectToRoom(ObfuscateJoinCode.DeObfuscate(obfuscatedCode));
+        }
+
+        public enum ExitCode
+        {
+            Success,
+            Invalid,
+            UnknownError
         }
 
     }
