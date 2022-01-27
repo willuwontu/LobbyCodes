@@ -8,6 +8,7 @@ namespace LobbyCodes.Networking
     class LobbyMonitor : MonoBehaviourPunCallbacks
     {
         public static LobbyMonitor instance {get; private set;}
+        public const string hostOnlyPropKey = "LobbyCodes-OnlyHost";
 
         private void Start()
         {
@@ -38,6 +39,34 @@ namespace LobbyCodes.Networking
                 }
 
                 LobbyUI.UpdateStreamerModeSettings();
+
+                // Check to see if host only is enabled.
+
+                ExitGames.Client.Photon.Hashtable customProperties;
+                if (PhotonNetwork.LocalPlayer.IsMasterClient)
+                {
+                    // Get the current custom properties of the local photon player object.
+                    customProperties = PhotonNetwork.LocalPlayer.CustomProperties;
+
+                    // Record the ping, we don't care if we override anything.
+                    customProperties[hostOnlyPropKey] = LobbyCodes.instance.onlyHostCanInviteConfig.Value;
+
+                    // Send out the update to their properties.
+                    PhotonNetwork.LocalPlayer.SetCustomProperties(customProperties, null, null);
+                }
+                else
+                {
+                    customProperties = PhotonNetwork.MasterClient.CustomProperties;
+
+                    if (customProperties.TryGetValue(hostOnlyPropKey, out var prop))
+                    {
+                        if ((bool)prop)
+                        {
+                            return;
+                        }
+                    }
+                }
+
                 LobbyUI.BG.SetActive(true);
                 LobbyUI.UpdateLobbyCode(LobbyCodeHandler.GetCode());
             }

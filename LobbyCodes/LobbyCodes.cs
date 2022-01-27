@@ -24,6 +24,8 @@ namespace LobbyCodes
         private static readonly string CompatibilityModName = ModName.Replace(" ","");
         public const string Version = "1.0.0"; // What version are we on (major.minor.patch)?
 
+        internal ConfigEntry<bool> onlyHostCanInviteConfig;
+
         internal AssetBundle assets = null;
 
         public List<AudioClip> click;
@@ -47,6 +49,8 @@ namespace LobbyCodes
             instance = this;
 
             this.gameObject.AddComponent<LobbyMonitor>();
+
+            onlyHostCanInviteConfig = Config.Bind("LobbyCodes", "HostOnly", false, "If enabled only the host can invite players.");
 
             assets = AssetUtils.LoadAssetBundleFromResources("lobbycodes", typeof(LobbyCodes).Assembly);
             click = assets.LoadAllAssets<AudioClip>().ToList().Where(clip => clip.name.Contains("UI_Button_Click")).ToList();
@@ -85,6 +89,8 @@ namespace LobbyCodes
             MenuHandler.CreateText(ModName, menu, out var _);
             MenuHandler.CreateText(" ", menu, out var _, 30);
             MenuHandler.CreateToggle(StreamerMode, "Enable Streamer Mode", menu, (bool val) => { StreamerMode = val; JoinUI.UpdateStreamerModeSettings(); LobbyUI.UpdateStreamerModeSettings(); });
+            MenuHandler.CreateText(" ", menu, out var _, 30);
+            MenuHandler.CreateToggle(onlyHostCanInviteConfig.Value, "Only host can invite", menu, (bool val) => { onlyHostCanInviteConfig.Value = val; });
         }
     }
 }

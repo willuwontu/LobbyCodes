@@ -23,7 +23,7 @@ namespace LobbyCodes.UI
         {
             get
             {
-                return UnityEngine.GameObject.Find("/Game/UI/UI_MainMenu/Canvas/");
+                return UnityEngine.GameObject.Find("/Game/UI/UI_Game/Canvas/");
             }
         }
 
@@ -72,6 +72,26 @@ namespace LobbyCodes.UI
             }
         }
 
+        private static GameObject _kicklist = null;
+
+        private static GameObject kicklist
+        {
+            get
+            {
+                if (LobbyUI._kicklist != null) { return LobbyUI._kicklist; }
+
+                LobbyUI._kicklist = LobbyCodes.instance.assets.LoadAsset<GameObject>("Dropdown");
+                kicklist.transform.SetParent(uiCanvas.transform);
+
+                RectTransform rect = LobbyUI._kicklist.GetComponent<RectTransform>();
+                rect.localScale = Vector3.one;
+                rect.anchorMin = new Vector2(0.5f, 0.5f);
+                rect.anchorMax = new Vector2(0.5f, 0.5f);
+                rect.pivot = new Vector2(0.5f, 0.5f);
+
+                return LobbyUI._kicklist;
+            }
+        }
         public static void UpdateLobbyCode(string code)
         {
             LobbyUI.input.GetComponent<TMP_InputField>().text = code;
@@ -420,6 +440,7 @@ namespace LobbyCodes.UI
             LobbyUI.input.transform.SetSiblingIndex(1);
             LobbyUI.copyButton.transform.SetSiblingIndex(2);
             GameObject _ = LobbyUI.popover;
+            _ = LobbyUI.kicklist;
         }
 
         private class BringBGToTop : MonoBehaviour
