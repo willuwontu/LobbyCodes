@@ -40,7 +40,6 @@ namespace LobbyCodes.Networking
                 LobbyUI.UpdateStreamerModeSettings();
                 LobbyUI.BG.SetActive(true);
                 LobbyUI.UpdateLobbyCode(LobbyCodeHandler.GetCode());
-                LobbyCodes.instance.ExecuteAfterSeconds(5f, () => LobbyUI.BG.transform.SetAsLastSibling());
             }
         }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using UnboundLib;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,14 +19,27 @@ namespace LobbyCodes.UI
 
         private static GameObject _BG = null;
 
+        private static GameObject uiCanvas
+        {
+            get
+            {
+                return UnityEngine.GameObject.Find("/Game/UI/UI_MainMenu/Canvas/");
+            }
+        }
+
         public static GameObject BG
         {
             get
             {
+                if (!uiCanvas.GetComponent<BringBGToTop>())
+                {
+                    uiCanvas.AddComponent<BringBGToTop>();
+                }
+
                 if (LobbyUI._BG != null) { return LobbyUI._BG; }
 
                 LobbyUI._BG = new GameObject("LobbyCode", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(HorizontalLayoutGroup), typeof(ContentSizeFitter));
-                LobbyUI._BG.transform.SetParent(UnityEngine.GameObject.Find("/Game/UI/UI_Game/Canvas/").transform);
+                LobbyUI._BG.transform.SetParent(uiCanvas.transform);
 
                 // We want to dock it in the top right corner
                 var rect = LobbyUI._BG.GetComponent<RectTransform>();
@@ -33,7 +47,7 @@ namespace LobbyCodes.UI
                 rect.anchorMin = new Vector2(1, 1);
                 rect.anchorMax = new Vector2(1, 1);
                 rect.pivot = new Vector2(1, 1);
-                rect.offsetMax = new Vector2(-10, -10);
+                rect.offsetMax = new Vector2(-10, -40);
                 rect.sizeDelta = new Vector2(380, 75);
 
                 var image = LobbyUI._BG.GetComponent<Image>();
@@ -78,7 +92,7 @@ namespace LobbyCodes.UI
                 var font = localGo.GetComponent<TextMeshProUGUI>().font;
                 var fontMaterials = localGo.GetComponent<TextMeshProUGUI>().fontMaterials;
 
-                LobbyUI._input = new GameObject("LobbyCodeInput", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(TMP_InputField));
+                LobbyUI._input = new GameObject("LobbyCode Input", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(TMP_InputField));
                 LobbyUI._input.transform.SetParent(LobbyUI.BG.transform);
 
                 TMP_InputField inputField = LobbyUI._input.GetComponent<TMP_InputField>();
@@ -267,7 +281,11 @@ namespace LobbyCodes.UI
                 button.image = image;
 
                 var interact = LobbyUI._copyButton.AddComponent<ButtonInteraction>();
-                interact.mouseClick.AddListener(() => input.GetComponent<TMP_InputField>().text.CopyToClipboard());
+                interact.mouseClick.AddListener(() => 
+                { 
+                    input.GetComponent<TMP_InputField>().text.CopyToClipboard();
+                    LobbyUI.popover.GetComponent<FadePopover>().Go();
+                });
 
                 var icon = new GameObject("Icon", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
                 icon.transform.SetParent(LobbyUI._copyButton.transform);
@@ -289,11 +307,127 @@ namespace LobbyCodes.UI
             }
         }
 
+        private static GameObject _popover = null;
+
+        private static GameObject popover
+        {
+            get
+            {
+                if (LobbyUI._popover != null) { return LobbyUI._popover; }
+
+                Sprite popoverIcon = LobbyCodes.instance.assets.LoadAsset<Sprite>("Popover4");
+                GameObject localGo = UnityEngine.GameObject.Find("/Game/UI/UI_MainMenu/Canvas/ListSelector/Main/Group/Local/Text");
+                var font = localGo.GetComponent<TextMeshProUGUI>().font;
+                var fontMaterials = localGo.GetComponent<TextMeshProUGUI>().fontMaterials;
+
+                // Get BG to make sure it exists.
+                GameObject _ = LobbyUI.BG;
+
+                LobbyUI._popover = new GameObject("Copy Popover", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+                LobbyUI._popover.transform.SetParent(LobbyUI.copyButton.transform);
+                RectTransform rect = LobbyUI._popover.GetComponent<RectTransform>();
+                {
+                    rect.localScale = new Vector3(1, 1, 1);
+                    rect.anchorMin = new Vector2(0.5f, 0.9f);
+                    rect.anchorMax = new Vector2(0.5f, 0.9f);
+                    rect.pivot = new Vector2(0.5f, 0f);
+                    rect.sizeDelta = new Vector2(80, 50);
+                }
+
+                var image = LobbyUI._popover.GetComponent<Image>();
+                image.sprite = popoverIcon;
+                image.color = new Color(0.25f, 0.25f, 0.25f, 0.8f);
+
+                var textobj = new GameObject("Text", typeof(RectTransform), typeof(CanvasRenderer), typeof(TextMeshProUGUI));
+                textobj.transform.SetParent(LobbyUI._popover.transform);
+
+                rect = textobj.GetComponent<RectTransform>();
+                {
+                    rect.localScale = new Vector3(1, 1, 1);
+                    rect.anchorMin = new Vector2(0f, 0f);
+                    rect.anchorMax = new Vector2(1f, 1f);
+                    rect.offsetMax = new Vector2(-5f, -5f);
+                    rect.offsetMin = new Vector2(5f, 5);
+                }
+
+                var text = textobj.GetComponent<TextMeshProUGUI>();
+                text.font = font;
+                text.fontMaterials = fontMaterials;
+                text.text = "Copied";
+                text.enableAutoSizing = true;
+                text.color = new Color(1, 1, 1, 0.8f);
+
+                var fade = LobbyUI._popover.AddComponent<FadePopover>();
+                fade.text = text;
+                fade.image = image;
+
+                LobbyUI._popover.SetActive(false);
+
+                return LobbyUI._popover;
+            }
+        }
+
+        private class FadePopover : MonoBehaviour
+        {
+            Coroutine fadeCoroutine = null;
+            float fadeDuration = 0.5f;
+            internal TextMeshProUGUI text = null;
+            internal Image image = null;
+
+            internal void Go()
+            {
+                if (fadeCoroutine != null)
+                {
+                    LobbyCodes.instance.StopCoroutine(fadeCoroutine);
+                }
+
+                LobbyUI.popover.SetActive(true);
+                ResetColors();
+
+                fadeCoroutine = LobbyCodes.instance.StartCoroutine(FadePopup());
+            }
+
+            private IEnumerator FadePopup()
+            {
+                yield return new WaitForSecondsRealtime(1.25f);
+
+                var timeremaining = fadeDuration;
+
+                while (timeremaining > 0f)
+                {
+                    image.color = new Color(0.25f, 0.25f, 0.25f, 0.8f * timeremaining/ fadeDuration);
+                    text.color = new Color(1, 1, 1, 0.8f * timeremaining / fadeDuration);
+
+                    timeremaining -= Time.deltaTime;
+                    yield return null;
+                }
+                LobbyUI.popover.SetActive(false);
+                ResetColors();
+
+                yield break;
+            }
+
+            private void ResetColors()
+            {
+                image.color = new Color(0.25f, 0.25f, 0.25f, 0.8f);
+                text.color = new Color(1, 1, 1, 0.8f);
+            }
+        }
+
         private static void SortChildren()
         {
             LobbyUI.text.transform.SetSiblingIndex(0);
             LobbyUI.input.transform.SetSiblingIndex(1);
             LobbyUI.copyButton.transform.SetSiblingIndex(2);
+            GameObject _ = LobbyUI.popover;
+        }
+
+        private class BringBGToTop : MonoBehaviour
+        {
+            private void OnTransformChildrenChanged()
+            {
+                this.ExecuteAfterFrames(1, () => LobbyUI.BG.transform.SetAsLastSibling());
+            }
         }
 
         private class ButtonInteraction : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler

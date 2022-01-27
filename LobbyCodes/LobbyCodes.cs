@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using BepInEx;
+using BepInEx.Configuration;
 using UnboundLib.GameModes;
 using UnityEngine;
 using Jotunn.Utils;
