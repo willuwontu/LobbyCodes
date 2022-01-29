@@ -8,6 +8,8 @@ using UnityEngine.UI;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using TMPro;
+using Photon.Pun;
+using LobbyCodes.Networking;
 
 namespace LobbyCodes.UI
 {
@@ -213,7 +215,15 @@ namespace LobbyCodes.UI
                     LobbyCodes.instance.hostOnlyConfigToggle.GetComponent<Toggle>().isOn = value;
                     if (PhotonNetwork.LocalPlayer.IsMasterClient)
                     {
-                        PhotonNetwork.LocalPlayer.SetOnlyHostCanInvite(value);
+                        ExitGames.Client.Photon.Hashtable customProperties;
+                        // Get the current custom properties of the local photon player object.
+                        customProperties = PhotonNetwork.LocalPlayer.CustomProperties;
+
+                        // Record the ping, we don't care if we override anything.
+                        customProperties[LobbyMonitor.hostOnlyPropKey] = value;
+
+                        // Send out the update to their properties.
+                        PhotonNetwork.LocalPlayer.SetCustomProperties(customProperties, null, null);
                     }
                 });
 
@@ -550,7 +560,7 @@ namespace LobbyCodes.UI
         /// <summary>
         /// The action run when the kick button is pressed. The input parameter is the player selected.
         /// </summary>
-        //public static Action<Photon.Realtime.Player> kickButtonPressed = null;
+        public static Action<Photon.Realtime.Player> kickButtonPressed = null;
 
         public static GameObject kickButton
         {
@@ -593,7 +603,14 @@ namespace LobbyCodes.UI
                             {
                                 if (kickButtonPressed != null && playerKickList.Count() > 0)
                                 {
-                                    LobbyMonitor.instance.ForceKickPlayer(playerKickList[LobbyUI._dropdown.value]);
+                                    try
+                                    {
+                                        kickButtonPressed(playerKickList[LobbyUI._dropdown.value]);
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        UnityEngine.Debug.LogException(e);
+                                    }
                                 }
                             })
                             .CancelButton("Cancel", () => { })
