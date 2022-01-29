@@ -69,6 +69,86 @@ namespace LobbyCodes.UI
             }
         }
 
+        private static GameObject _hostOnlyContainer = null;
+
+        public static GameObject hostOnlyContainer
+        {
+            get
+            {
+                if (LobbyUI._hostOnlyContainer != null) { return LobbyUI._hostOnlyContainer; }
+
+                // Get BG to make sure it exists.
+                GameObject _ = LobbyUI.BG;
+
+                LobbyUI._hostOnlyContainer = new GameObject("Kick Container", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(HorizontalLayoutGroup), typeof(ContentSizeFitter));
+                LobbyUI._hostOnlyContainer.transform.SetParent(LobbyUI.BG.transform);
+
+                RectTransform rect = LobbyUI._hostOnlyContainer.GetComponent<RectTransform>();
+                rect.localScale = new Vector3(1, 1, 1);
+                rect.anchorMin = new Vector2(1, 1);
+                rect.anchorMax = new Vector2(1, 1);
+                rect.pivot = new Vector2(1, 1);
+                rect.sizeDelta = new Vector2(300, 40);
+
+                var group = LobbyUI._hostOnlyContainer.GetComponent<HorizontalLayoutGroup>();
+                group.childAlignment = TextAnchor.UpperRight;
+                group.childControlHeight = false;
+                group.childForceExpandHeight = false;
+                group.childControlWidth = false;
+                group.childForceExpandWidth = false;
+                group.spacing = 5f;
+                group.padding = new RectOffset(5, 5, 5, 5);
+
+                var image = LobbyUI._hostOnlyContainer.GetComponent<Image>();
+                image.color = new Color(1, 1, 1, 0.05f);
+
+                var sizeFitter = _hostOnlyContainer.GetComponent<ContentSizeFitter>();
+                sizeFitter.verticalFit = ContentSizeFitter.FitMode.MinSize;
+                sizeFitter.horizontalFit = ContentSizeFitter.FitMode.MinSize;
+
+                return LobbyUI._hostOnlyContainer;
+            }
+        }
+
+        private static GameObject _hostOnlyText = null;
+
+        public static GameObject hostOnlyText
+        {
+            get
+            {
+                if (LobbyUI._hostOnlyText != null) { return LobbyUI._hostOnlyText; }
+
+                GameObject localGo = UnityEngine.GameObject.Find("/Game/UI/UI_MainMenu/Canvas/ListSelector/Main/Group/Local/Text");
+                TMP_FontAsset font = localGo.GetComponent<TextMeshProUGUI>().font;
+                Material[] fontMaterials = localGo.GetComponent<TextMeshProUGUI>().fontMaterials;
+
+                // Get BG to make sure it exists.
+                GameObject _ = LobbyUI.hostOnlyContainer;
+
+                LobbyUI._hostOnlyText = new GameObject("Host Only Text", typeof(RectTransform), typeof(CanvasRenderer), typeof(TextMeshProUGUI));
+                LobbyUI._hostOnlyText.transform.SetParent(LobbyUI.hostOnlyContainer.transform);
+
+                RectTransform rect = LobbyUI._hostOnlyText.GetComponent<RectTransform>();
+                rect.localScale = Vector3.one;
+                rect.anchorMin = new Vector2(0.5f, 0.5f);
+                rect.anchorMax = new Vector2(0.5f, 0.5f);
+                rect.pivot = new Vector2(0.5f, 0.5f);
+                rect.offsetMin = new Vector2(0, 0);
+                rect.offsetMax = new Vector2(0, 0);
+                rect.sizeDelta = new Vector2(265, 40);
+
+                var text = LobbyUI._hostOnlyText.GetComponent<TextMeshProUGUI>();
+                text.font = font;
+                text.fontMaterials = fontMaterials;
+                text.color = new Color(1, 1, 1, 0.8f);
+                text.text = "Only host can invite:".ToUpper();
+                text.enableAutoSizing = true;
+                text.alignment = TextAlignmentOptions.Right;
+
+                return LobbyUI._hostOnlyText;
+            }
+        }
+
         private static GameObject _hostOnlyToggle = null;
 
         public static GameObject hostOnlyToggle
@@ -77,8 +157,60 @@ namespace LobbyCodes.UI
             {
                 if (LobbyUI._hostOnlyToggle != null) { return LobbyUI._hostOnlyToggle; }
 
-                LobbyUI._hostOnlyToggle = UnboundLib.Utils.UI.MenuHandler.CreateToggle(LobbyCodes.instance.onlyHostCanInviteConfig.Value, "Only host can invite:", BG, (value)=> 
-                { 
+                // Get BG to make sure it exists.
+                GameObject _ = LobbyUI.hostOnlyContainer;
+
+                var unboundToggle = UnboundLib.Utils.UI.MenuHandler.CreateToggle(LobbyCodes.instance.onlyHostCanInviteConfig.Value, "Only host can invite:", BG, null, 30, false, null, null, null, TextAlignmentOptions.Right);
+
+                var bgImage = unboundToggle.transform.GetChild(0).gameObject.GetComponent<Image>();
+                var checkImage = unboundToggle.transform.GetChild(0).GetChild(0).gameObject.GetComponent<Image>();
+
+                LobbyUI._hostOnlyToggle = new GameObject("HostOnly Toggle", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(Mask), typeof(Toggle));
+                LobbyUI._hostOnlyToggle.transform.SetParent(LobbyUI.hostOnlyContainer.transform);
+
+                RectTransform rect = LobbyUI._hostOnlyToggle.GetComponent<RectTransform>();
+                rect.localScale = Vector3.one;
+                rect.anchorMin = new Vector2(0.5f, 0.5f);
+                rect.anchorMax = new Vector2(0.5f, 0.5f);
+                rect.pivot = new Vector2(0.5f, 0.5f);
+                rect.offsetMin = new Vector2(0, 0);
+                rect.offsetMax = new Vector2(0, 0);
+                rect.sizeDelta = new Vector2(40f, 40f);
+
+                Image image = LobbyUI._hostOnlyToggle.GetComponent<Image>();
+                image.sprite = bgImage.sprite;
+                image.color = bgImage.color;
+                image.material = bgImage.material;
+
+                var mask = LobbyUI._hostOnlyToggle.GetComponent<Mask>();
+                mask.showMaskGraphic = true;
+
+                var toggle = LobbyUI._hostOnlyToggle.GetComponent<Toggle>();
+                toggle.targetGraphic = image;
+
+                // Checkmark
+                var check = new GameObject("Checkmark", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+                check.transform.SetParent(LobbyUI._hostOnlyToggle.transform);
+
+                rect = check.GetComponent<RectTransform>();
+                rect.localScale = Vector3.one;
+                rect.anchorMin = new Vector2(0f, 0f);
+                rect.anchorMax = new Vector2(1f, 1f);
+                rect.pivot = new Vector2(0.5f, 0.5f);
+                rect.offsetMin = new Vector2(5, 5);
+                rect.offsetMax = new Vector2(-5, -5);
+                rect.Rotate(0, 0, 45);
+
+                image = check.GetComponent<Image>();
+                image.sprite = checkImage.sprite;
+                image.color = checkImage.color;
+                image.material = checkImage.material;
+
+                toggle.graphic = image;
+                toggle.isOn = LobbyCodes.instance.onlyHostCanInviteConfig.Value;
+
+                toggle.onValueChanged.AddListener((value) =>
+                {
                     LobbyCodes.instance.onlyHostCanInviteConfig.Value = value;
                     LobbyCodes.instance.hostOnlyConfigToggle.GetComponent<Toggle>().isOn = value;
                     if (PhotonNetwork.LocalPlayer.IsMasterClient)
@@ -93,9 +225,9 @@ namespace LobbyCodes.UI
                         // Send out the update to their properties.
                         PhotonNetwork.LocalPlayer.SetCustomProperties(customProperties, null, null);
                     }
-                }, 30, false, null, null, null, TextAlignmentOptions.Right);
+                });
 
-
+                UnityEngine.GameObject.Destroy(unboundToggle);
 
                 return LobbyUI._hostOnlyToggle;
             }
@@ -147,6 +279,9 @@ namespace LobbyCodes.UI
             get
             {
                 if (LobbyUI._kickContainer != null) { return LobbyUI._kickContainer; }
+
+                // Get BG to make sure it exists.
+                GameObject _ = LobbyUI.BG;
 
                 LobbyUI._kickContainer = new GameObject("Kick Container", typeof(RectTransform), typeof(CanvasRenderer), typeof(HorizontalLayoutGroup), typeof(ContentSizeFitter));
                 LobbyUI._kickContainer.transform.SetParent(LobbyUI.BG.transform);
@@ -868,6 +1003,8 @@ namespace LobbyCodes.UI
             LobbyUI.input.transform.SetSiblingIndex(1);
             LobbyUI.copyButton.transform.SetSiblingIndex(2);
 
+            LobbyUI.hostOnlyContainer.transform.SetSiblingIndex(1);
+            LobbyUI.hostOnlyText.transform.SetSiblingIndex(0);
             LobbyUI.hostOnlyToggle.transform.SetSiblingIndex(1);
 
             LobbyUI.kickContainer.transform.SetSiblingIndex(2);

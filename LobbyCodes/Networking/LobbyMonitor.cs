@@ -47,6 +47,7 @@ namespace LobbyCodes.Networking
                 ExitGames.Client.Photon.Hashtable customProperties;
                 if (PhotonNetwork.LocalPlayer.IsMasterClient)
                 {
+                    var _ = LobbyUI.hostOnlyToggle;
                     LobbyUI.hostOnlyToggle.GetComponent<UnityEngine.UI.Toggle>().interactable = true;
                     LobbyUI.kickContainer.SetActive(true);
                     // Get the current custom properties of the local photon player object.
