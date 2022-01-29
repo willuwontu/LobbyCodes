@@ -10,6 +10,7 @@ using UnityEngine.EventSystems;
 using TMPro;
 using Photon.Pun;
 using LobbyCodes.Networking;
+using LobbyCodes.Extensions;
 
 namespace LobbyCodes.UI
 {
@@ -214,15 +215,7 @@ namespace LobbyCodes.UI
                     LobbyCodes.instance.hostOnlyConfigToggle.GetComponent<Toggle>().isOn = value;
                     if (PhotonNetwork.LocalPlayer.IsMasterClient)
                     {
-                        ExitGames.Client.Photon.Hashtable customProperties;
-                        // Get the current custom properties of the local photon player object.
-                        customProperties = PhotonNetwork.LocalPlayer.CustomProperties;
-
-                        // Record the ping, we don't care if we override anything.
-                        customProperties[LobbyMonitor.hostOnlyPropKey] = value;
-
-                        // Send out the update to their properties.
-                        PhotonNetwork.LocalPlayer.SetCustomProperties(customProperties, null, null);
+                        PhotonNetwork.LocalPlayer.SetOnlyHostCanInvite(value);
                     }
                 });
 
