@@ -64,6 +64,7 @@ namespace LobbyCodes.UI
                 group.padding = new RectOffset(10, 10, 40, 10);
 
                 LobbyCodes.instance.ExecuteAfterFrames(1, LobbyUI.SortChildren);
+                LobbyCodes.instance.ExecuteAfterFrames(5, LobbyUI.SortChildren);
 
                 return LobbyUI._BG;
             }
@@ -588,14 +589,18 @@ namespace LobbyCodes.UI
                 {
                     if (playerKickList.Count() > 0)
                     {
-                        try
-                        {
-                            LobbyMonitor.instance.ForceKickPlayer(playerKickList[LobbyUI._dropdown.value]);
-                        }
-                        catch (Exception e)
-                        {
-                            UnityEngine.Debug.LogException(e);
-                        }
+                        Unbound.BuildModal()
+                            .Title("Kick Player")
+                            .Message($"Kick {playerKickList[LobbyUI._dropdown.value].NickName} from the lobby?")
+                            .ConfirmButton("Kick", () =>
+                            {
+                                if (kickButtonPressed != null && playerKickList.Count() > 0)
+                                {
+                                    LobbyMonitor.instance.ForceKickPlayer(playerKickList[LobbyUI._dropdown.value]);
+                                }
+                            })
+                            .CancelButton("Cancel", () => { })
+                            .Show();
                     }
                 });
 

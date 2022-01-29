@@ -42,17 +42,19 @@ namespace LobbyCodes.Networking
                     }
                 }
 
-                LobbyUI.UpdateStreamerModeSettings();
-                LobbyUI.CodesContainer.SetActive(true);
-
                 // Force necessary UI into existance.
                 var _ = LobbyUI.hostOnlyToggle;
                 _ = LobbyUI.kickContainer;
+
+                LobbyUI.UpdateStreamerModeSettings();
+                LobbyUI.CodesContainer.SetActive(true);
+                LobbyUI.hostOnlyToggle.GetComponent<UnityEngine.UI.Toggle>().interactable = PhotonNetwork.LocalPlayer.IsMasterClient;
 
                 // Check to see if host only is enabled.
 
                 if (PhotonNetwork.LocalPlayer.IsMasterClient)
                 {
+
                     LobbyUI.hostOnlyToggle.GetComponent<UnityEngine.UI.Toggle>().interactable = true;
                     LobbyUI.kickContainer.SetActive(true);
                     PhotonNetwork.LocalPlayer.SetOnlyHostCanInvite(LobbyCodes.instance.onlyHostCanInviteConfig.Value);
@@ -66,7 +68,7 @@ namespace LobbyCodes.Networking
 
                 LobbyUI.BG.SetActive(true);
                 LobbyUI.UpdateLobbyCode(LobbyCodeHandler.GetCode());
-                LobbyUI.UpdateKickList(PhotonNetwork.CurrentRoom.Players.Values.Where((player) => player != PhotonNetwork.MasterClient).ToArray());
+                LobbyUI.UpdateKickList(PhotonNetwork.CurrentRoom.Players.Values.Where(player => player != PhotonNetwork.MasterClient).ToArray());
             }
         }
 
