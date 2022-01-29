@@ -45,7 +45,7 @@ namespace LobbyCodes.Networking
                 _ = LobbyUI.kickContainer;
 
                 LobbyUI.UpdateStreamerModeSettings();
-                LobbyUI.CodesContainer.SetActive(PhotonNetwork.LocalPlayer.IsMasterClient);
+                LobbyUI.CodesContainer.SetActive(true);
                 LobbyUI.hostOnlyToggle.GetComponent<UnityEngine.UI.Toggle>().interactable = PhotonNetwork.LocalPlayer.IsMasterClient;
 
                 // Check to see if host only is enabled.
@@ -83,7 +83,7 @@ namespace LobbyCodes.Networking
 
         public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
         {
-            LobbyUI.UpdateKickList(PhotonNetwork.CurrentRoom.Players.Values.ToArray());
+            LobbyUI.UpdateKickList(PhotonNetwork.CurrentRoom.Players.Values.Where(player => player != PhotonNetwork.MasterClient).ToArray());
         }
 
         public override void OnLeftRoom()
