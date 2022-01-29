@@ -594,7 +594,7 @@ namespace LobbyCodes.UI
                             .Message($"Kick {playerKickList[LobbyUI._dropdown.value].NickName} from the lobby?")
                             .ConfirmButton("Kick", () =>
                             {
-                                if (kickButtonPressed != null && playerKickList.Count() > 0)
+                                if (playerKickList.Count() > 0)
                                 {
                                     LobbyMonitor.instance.ForceKickPlayer(playerKickList[LobbyUI._dropdown.value]);
                                 }
