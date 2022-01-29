@@ -13,6 +13,7 @@ using UnboundLib.Utils.UI;
 using UnboundLib;
 using UnboundLib.Networking;
 using Photon.Pun;
+using HarmonyLib;
 
 namespace LobbyCodes
 {
@@ -33,6 +34,7 @@ namespace LobbyCodes
         public List<AudioClip> click;
         public List<AudioClip> hover;
 
+        private static Harmony harmony;
         public static LobbyCodes instance { get; private set; }
 
 #if DEBUG
@@ -46,6 +48,11 @@ namespace LobbyCodes
             if (DEBUG) { UnityEngine.Debug.Log($"[{ModName}] {message}"); }
         }
 
+        void Awake()
+        {
+            harmony = new Harmony(ModId);
+            harmony.PatchAll();
+        }
         void Start()
         {
             instance = this;

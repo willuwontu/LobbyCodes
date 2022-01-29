@@ -596,7 +596,7 @@ namespace LobbyCodes.UI
                             {
                                 if (playerKickList.Count() > 0)
                                 {
-                                    LobbyMonitor.instance.ForceKickPlayer(playerKickList[LobbyUI._dropdown.value]);
+                                    LobbyMonitor.instance.ForceKickPlayer(playerKickList[LobbyUI._dropdown.value], true);
                                 }
                             })
                             .CancelButton("Cancel", () => { })
