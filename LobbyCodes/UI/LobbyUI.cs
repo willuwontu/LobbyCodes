@@ -166,7 +166,7 @@ namespace LobbyCodes.UI
                 var bgImage = unboundToggle.transform.GetChild(0).gameObject.GetComponent<Image>();
                 var checkImage = unboundToggle.transform.GetChild(0).GetChild(0).gameObject.GetComponent<Image>();
 
-                LobbyUI._hostOnlyToggle = new GameObject("HostOnly Toggle", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(Mask), typeof(Toggle));
+                LobbyUI._hostOnlyToggle = new GameObject("HostOnly Toggle", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(Mask), typeof(Toggle), typeof(ButtonInteraction));
                 LobbyUI._hostOnlyToggle.transform.SetParent(LobbyUI.hostOnlyContainer.transform);
 
                 RectTransform rect = LobbyUI._hostOnlyToggle.GetComponent<RectTransform>();
@@ -293,7 +293,7 @@ namespace LobbyCodes.UI
                 group.childControlWidth = false;
                 group.childForceExpandWidth = false;
                 group.spacing = 5f;
-                group.padding = new RectOffset(5, 5, 5, 5);
+                group.padding = new RectOffset(0, 0, 0, 0);
 
                 var sizeFitter = _kickContainer.GetComponent<ContentSizeFitter>();
                 sizeFitter.verticalFit = ContentSizeFitter.FitMode.MinSize;
@@ -330,7 +330,7 @@ namespace LobbyCodes.UI
                 rect.anchorMin = new Vector2(1f, 1f);
                 rect.anchorMax = new Vector2(1f, 1f);
                 rect.pivot = new Vector2(1f, 1f);
-                rect.sizeDelta = new Vector2(263.125f, 40);
+                rect.sizeDelta = new Vector2(268.125f, 40);
 
 
                 Image image = LobbyUI._kicklist.GetComponent<Image>();
@@ -776,6 +776,7 @@ namespace LobbyCodes.UI
                 inputField.textComponent = inputText.GetComponent<TextMeshProUGUI>();
                 inputField.text = "";
                 inputField.textComponent.color = new Color(0.9f, 0.9f, 0.9f, 0.8f);
+                inputField.selectionColor = new Color(0.5f, 0.5f, 0.5f, 0.7f);
 
                 inputField.onSelect.AddListener((str) => LobbyCodes.Log($"{str}"));
 
