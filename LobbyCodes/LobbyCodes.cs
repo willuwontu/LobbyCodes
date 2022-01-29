@@ -25,6 +25,7 @@ namespace LobbyCodes
         public const string Version = "1.0.0"; // What version are we on (major.minor.patch)?
 
         internal ConfigEntry<bool> onlyHostCanInviteConfig;
+        internal GameObject hostOnlyConfigToggle;
 
         internal AssetBundle assets = null;
 
@@ -90,7 +91,7 @@ namespace LobbyCodes
             MenuHandler.CreateText(" ", menu, out var _, 30);
             MenuHandler.CreateToggle(StreamerMode, "Enable Streamer Mode", menu, (bool val) => { StreamerMode = val; JoinUI.UpdateStreamerModeSettings(); LobbyUI.UpdateStreamerModeSettings(); });
             MenuHandler.CreateText(" ", menu, out var _, 30);
-            MenuHandler.CreateToggle(onlyHostCanInviteConfig.Value, "Only host can invite", menu, (bool val) => { onlyHostCanInviteConfig.Value = val; });
+            hostOnlyConfigToggle = MenuHandler.CreateToggle(onlyHostCanInviteConfig.Value, "Only host can invite", menu, (bool val) => { onlyHostCanInviteConfig.Value = val; });
         }
     }
 }
