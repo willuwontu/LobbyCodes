@@ -2,6 +2,7 @@
 using LobbyCodes.Utils;
 using System;
 using System.Linq;
+using LobbyCodes.Extensions;
 
 namespace LobbyCodes.Networking
 {
@@ -62,6 +63,8 @@ namespace LobbyCodes.Networking
             if (string.IsNullOrEmpty(pureCode)) { return ExitCode.Empty; }
 
             ExitCode exitCode = ExitCode.Success;
+
+            PhotonNetwork.LocalPlayer.SetWasInvitedByHost(fromHost);
 
             try
             {
