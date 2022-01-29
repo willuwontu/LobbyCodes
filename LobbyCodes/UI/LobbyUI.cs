@@ -293,7 +293,7 @@ namespace LobbyCodes.UI
                 group.childControlWidth = false;
                 group.childForceExpandWidth = false;
                 group.spacing = 5f;
-                group.padding = new RectOffset(0, 0, 0, 0);
+                group.padding = new RectOffset(5, 5, 0, 0);
 
                 var sizeFitter = _kickContainer.GetComponent<ContentSizeFitter>();
                 sizeFitter.verticalFit = ContentSizeFitter.FitMode.MinSize;
