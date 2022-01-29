@@ -40,20 +40,19 @@ namespace LobbyCodes.Networking
                     }
                 }
 
-                LobbyUI.UpdateStreamerModeSettings();
-                LobbyUI.CodesContainer.SetActive(true);
-
                 // Force necessary UI into existance.
                 var _ = LobbyUI.hostOnlyToggle;
                 _ = LobbyUI.kickContainer;
+
+                LobbyUI.UpdateStreamerModeSettings();
+                LobbyUI.CodesContainer.SetActive(PhotonNetwork.LocalPlayer.IsMasterClient);
+                LobbyUI.hostOnlyToggle.GetComponent<UnityEngine.UI.Toggle>().interactable = PhotonNetwork.LocalPlayer.IsMasterClient;
 
                 // Check to see if host only is enabled.
 
                 ExitGames.Client.Photon.Hashtable customProperties;
                 if (PhotonNetwork.LocalPlayer.IsMasterClient)
                 {
-                    LobbyUI.hostOnlyToggle.GetComponent<UnityEngine.UI.Toggle>().interactable = true;
-                    LobbyUI.kickContainer.SetActive(true);
                     // Get the current custom properties of the local photon player object.
                     customProperties = PhotonNetwork.LocalPlayer.CustomProperties;
 
@@ -65,8 +64,6 @@ namespace LobbyCodes.Networking
                 }
                 else
                 {
-                    LobbyUI.hostOnlyToggle.GetComponent<UnityEngine.UI.Toggle>().interactable = true;
-                    LobbyUI.kickContainer.SetActive(false);
                     customProperties = PhotonNetwork.MasterClient.CustomProperties;
 
                     if (customProperties.TryGetValue(hostOnlyPropKey, out var prop))
@@ -80,7 +77,7 @@ namespace LobbyCodes.Networking
 
                 LobbyUI.BG.SetActive(true);
                 LobbyUI.UpdateLobbyCode(LobbyCodeHandler.GetCode());
-                LobbyUI.UpdateKickList(PhotonNetwork.CurrentRoom.Players.Values.Where((player) => player != PhotonNetwork.MasterClient).ToArray());
+                LobbyUI.UpdateKickList(PhotonNetwork.CurrentRoom.Players.Values.Where(player => player != PhotonNetwork.MasterClient).ToArray());
             }
         }
 
