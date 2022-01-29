@@ -4,15 +4,17 @@ using UnboundLib;
 using LobbyCodes.UI;
 using LobbyCodes.Networking;
 using ExitGames.Client.Photon;
+using LobbyCodes.Extensions;
+using System.Collections;
+using UnityEngine;
 
 namespace LobbyCodes.Networking
 {
     public class LobbyMonitor : MonoBehaviourPunCallbacks
     {
         public static LobbyMonitor instance {get; private set;}
-        public const string hostOnlyPropKey = "LobbyCodes-OnlyHost";
 
-        private void Start()
+        private void Awake()
         {
             instance = this;
         }
@@ -40,50 +42,62 @@ namespace LobbyCodes.Networking
                     }
                 }
 
+                LobbyUI.UpdateStreamerModeSettings();
+                LobbyUI.CodesContainer.SetActive(true);
+
                 // Force necessary UI into existance.
                 var _ = LobbyUI.hostOnlyToggle;
                 _ = LobbyUI.kickContainer;
 
-                LobbyUI.UpdateStreamerModeSettings();
-                LobbyUI.CodesContainer.SetActive(true);
-                LobbyUI.hostOnlyToggle.GetComponent<UnityEngine.UI.Toggle>().interactable = PhotonNetwork.LocalPlayer.IsMasterClient;
-
                 // Check to see if host only is enabled.
 
-                ExitGames.Client.Photon.Hashtable customProperties;
                 if (PhotonNetwork.LocalPlayer.IsMasterClient)
                 {
-                    // Get the current custom properties of the local photon player object.
-                    customProperties = PhotonNetwork.LocalPlayer.CustomProperties;
-
-                    // Record the ping, we don't care if we override anything.
-                    customProperties[hostOnlyPropKey] = LobbyCodes.instance.onlyHostCanInviteConfig.Value;
-
-                    // Send out the update to their properties.
-                    PhotonNetwork.LocalPlayer.SetCustomProperties(customProperties, null, null);
+                    LobbyUI.hostOnlyToggle.GetComponent<UnityEngine.UI.Toggle>().interactable = true;
+                    LobbyUI.kickContainer.SetActive(true);
+                    PhotonNetwork.LocalPlayer.SetOnlyHostCanInvite(LobbyCodes.instance.onlyHostCanInviteConfig.Value);
                 }
                 else
                 {
-                    customProperties = PhotonNetwork.MasterClient.CustomProperties;
-
-                    if (customProperties.TryGetValue(hostOnlyPropKey, out var prop))
-                    {
-                        if ((bool)prop)
-                        {
-                            LobbyUI.CodesContainer.SetActive(false);
-                        }
-                    }
+                    LobbyUI.hostOnlyToggle.GetComponent<UnityEngine.UI.Toggle>().interactable = true;
+                    LobbyUI.kickContainer.SetActive(false);
+                    LobbyUI.CodesContainer.SetActive(!PhotonNetwork.MasterClient.OnlyHostCanInvite());
                 }
 
                 LobbyUI.BG.SetActive(true);
                 LobbyUI.UpdateLobbyCode(LobbyCodeHandler.GetCode());
-                LobbyUI.UpdateKickList(PhotonNetwork.CurrentRoom.Players.Values.Where(player => player != PhotonNetwork.MasterClient).ToArray());
+                LobbyUI.UpdateKickList(PhotonNetwork.CurrentRoom.Players.Values.Where((player) => player != PhotonNetwork.MasterClient).ToArray());
             }
         }
 
         public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
         {
-            LobbyUI.UpdateKickList(PhotonNetwork.CurrentRoom.Players.Values.Where(player => player != PhotonNetwork.MasterClient).ToArray());
+            if (!newPlayer.WasInvitedByHost() && PhotonNetwork.MasterClient.OnlyHostCanInvite())
+            {
+                if (PhotonNetwork.IsMasterClient)
+                {
+                    this.ForceKickPlayer(newPlayer);
+                }
+            }
+            LobbyUI.UpdateKickList(PhotonNetwork.CurrentRoom.Players.Values.Where(p => !p.IsMasterClient).ToArray());
+        }
+        public override void OnPlayerLeftRoom(Photon.Realtime.Player newPlayer)
+        {
+            LobbyUI.UpdateKickList(PhotonNetwork.CurrentRoom.Players.Values.Where(p => !p.IsMasterClient).ToArray());
+        }
+
+        public void ForceKickPlayer(Photon.Realtime.Player player)
+        {
+            this.StartCoroutine(this.IForceKickPlayer(player));
+        }
+        private IEnumerator IForceKickPlayer(Photon.Realtime.Player player)
+        {
+            while (PhotonNetwork.CurrentRoom.Players.Values.Contains(player))
+            {
+                PhotonNetwork.CloseConnection(player);
+                yield return new WaitForSecondsRealtime(0.5f);
+            }
+            yield break;
         }
 
         public override void OnLeftRoom()
@@ -92,17 +106,14 @@ namespace LobbyCodes.Networking
             LobbyUI.BG.SetActive(false);
         }
 
-        public override void OnPlayerPropertiesUpdate(Photon.Realtime.Player targetPlayer, Hashtable changedProps)
+        public override void OnPlayerPropertiesUpdate(Photon.Realtime.Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
         {
             // look to see if the host's host only invite properties have changed.
             if (targetPlayer.IsMasterClient && !PhotonNetwork.LocalPlayer.IsMasterClient)
             {
-                if (changedProps.TryGetValue(hostOnlyPropKey, out var hostOnlyState))
-                {
-                    LobbyUI.hostOnlyToggle.GetComponent<UnityEngine.UI.Toggle>().isOn = (bool) hostOnlyState;
+                LobbyUI.hostOnlyToggle.GetComponent<UnityEngine.UI.Toggle>().isOn = (bool) PhotonNetwork.MasterClient.OnlyHostCanInvite();
 
-                    LobbyUI.CodesContainer.SetActive(!(bool)hostOnlyState);
-                }
+                LobbyUI.CodesContainer.SetActive(!(bool)PhotonNetwork.MasterClient.OnlyHostCanInvite());
             }
         }
     }
