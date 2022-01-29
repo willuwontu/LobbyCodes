@@ -6,17 +6,28 @@ using LobbyCodes.Networking;
 using ExitGames.Client.Photon;
 using LobbyCodes.Extensions;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using UnboundLib.Networking;
+using System.Linq;
 
 namespace LobbyCodes.Networking
 {
     public class LobbyMonitor : MonoBehaviourPunCallbacks
     {
         public static LobbyMonitor instance {get; private set;}
+        private List<string> kickedUserIDs = new List<string>() { };
 
         private void Awake()
         {
             instance = this;
+        }
+
+        public override void OnCreatedRoom()
+        {
+            if (PhotonNetwork.IsMasterClient)
+            {
+            }
         }
 
         public override void OnJoinedRoom()
@@ -54,10 +65,9 @@ namespace LobbyCodes.Networking
 
                 if (PhotonNetwork.LocalPlayer.IsMasterClient)
                 {
-
                     LobbyUI.hostOnlyToggle.GetComponent<UnityEngine.UI.Toggle>().interactable = true;
                     LobbyUI.kickContainer.SetActive(true);
-                    PhotonNetwork.LocalPlayer.SetOnlyHostCanInvite(LobbyCodes.instance.onlyHostCanInviteConfig.Value);
+                    PhotonNetwork.LocalPlayer.SetOnlyHostCanInvite(LobbyCodes.OnlyHostCanInvite);
                 }
                 else
                 {
@@ -65,6 +75,9 @@ namespace LobbyCodes.Networking
                     LobbyUI.kickContainer.SetActive(false);
                     LobbyUI.CodesContainer.SetActive(!PhotonNetwork.MasterClient.OnlyHostCanInvite());
                 }
+
+                // clear the kickedUserIDs
+                this.kickedUserIDs = new List<string>() { };
 
                 LobbyUI.BG.SetActive(true);
                 LobbyUI.UpdateLobbyCode(LobbyCodeHandler.GetCode());
@@ -77,11 +90,11 @@ namespace LobbyCodes.Networking
 
         public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
         {
-            if (!newPlayer.WasInvitedByHost() && PhotonNetwork.MasterClient.OnlyHostCanInvite())
+            if ((!newPlayer.WasInvitedByHost() && PhotonNetwork.MasterClient.OnlyHostCanInvite()) || this.kickedUserIDs.Contains(newPlayer.UserId))
             {
                 if (PhotonNetwork.IsMasterClient)
                 {
-                    this.ForceKickPlayer(newPlayer);
+                    this.ForceKickPlayer(newPlayer, false);
                 }
             }
             this.ExecuteAfterSeconds(1f, () =>
@@ -94,14 +107,20 @@ namespace LobbyCodes.Networking
             LobbyUI.UpdateKickList(PhotonNetwork.CurrentRoom.Players.Values.Where(p => !p.IsMasterClient).ToArray());
         }
 
-        public void ForceKickPlayer(Photon.Realtime.Player player)
+        public void ForceKickPlayer(Photon.Realtime.Player player, bool addToKickedUsers)
         {
+            if (addToKickedUsers && !this.kickedUserIDs.Contains(player.UserId))
+            {
+                this.kickedUserIDs.Add(player.UserId);
+            }
             this.StartCoroutine(this.IForceKickPlayer(player));
         }
         private IEnumerator IForceKickPlayer(Photon.Realtime.Player player)
         {
             while (PhotonNetwork.CurrentRoom.Players.Values.Contains(player))
             {
+                NetworkingManager.RPC(typeof(LobbyCodes), nameof(LobbyCodes.RPCS_Kick), new Photon.Realtime.RaiseEventOptions { TargetActors = new int[] { player.ActorNumber } }, player.ActorNumber);
+                NetworkingManager.RPC(typeof(Unbound), nameof(Unbound.BuildInfoPopup), new Photon.Realtime.RaiseEventOptions { TargetActors = new int[] { player.ActorNumber } }, "You have been kicked from the lobby.");
                 PhotonNetwork.CloseConnection(player);
                 yield return new WaitForSecondsRealtime(0.5f);
             }

@@ -11,6 +11,9 @@ using LobbyCodes.Networking;
 using LobbyCodes.UI;
 using UnboundLib.Utils.UI;
 using UnboundLib;
+using UnboundLib.Networking;
+using Photon.Pun;
+using HarmonyLib;
 
 namespace LobbyCodes
 {
@@ -24,7 +27,6 @@ namespace LobbyCodes
         private static readonly string CompatibilityModName = ModName.Replace(" ","");
         public const string Version = "1.0.0"; // What version are we on (major.minor.patch)?
 
-        internal ConfigEntry<bool> onlyHostCanInviteConfig;
         internal GameObject hostOnlyConfigToggle;
 
         internal AssetBundle assets = null;
@@ -32,6 +34,7 @@ namespace LobbyCodes
         public List<AudioClip> click;
         public List<AudioClip> hover;
 
+        private static Harmony harmony;
         public static LobbyCodes instance { get; private set; }
 
 #if DEBUG
@@ -45,13 +48,16 @@ namespace LobbyCodes
             if (DEBUG) { UnityEngine.Debug.Log($"[{ModName}] {message}"); }
         }
 
+        void Awake()
+        {
+            harmony = new Harmony(ModId);
+            harmony.PatchAll();
+        }
         void Start()
         {
             instance = this;
 
             this.gameObject.AddComponent<LobbyMonitor>();
-
-            onlyHostCanInviteConfig = Config.Bind("LobbyCodes", "HostOnly", false, "If enabled only the host can invite players.");
 
             assets = AssetUtils.LoadAssetBundleFromResources("lobbycodes", typeof(LobbyCodes).Assembly);
             click = assets.LoadAllAssets<AudioClip>().ToList().Where(clip => clip.name.Contains("UI_Button_Click")).ToList();
@@ -77,6 +83,17 @@ namespace LobbyCodes
                 PlayerPrefs.SetInt(GetConfigKey("StreamerMode"), value ? 1 : 0);
             }
         }
+        public static bool OnlyHostCanInvite
+        {
+            get
+            {
+                return PlayerPrefs.GetInt(GetConfigKey("OnlyHostCanInvite"), 0) == 1;
+            }
+            internal set
+            {
+                PlayerPrefs.SetInt(GetConfigKey("OnlyHostCanInvite"), value ? 1 : 0);
+            }
+        }
 
         private IEnumerator GameStart(IGameModeHandler gm)
         {
@@ -91,7 +108,14 @@ namespace LobbyCodes
             MenuHandler.CreateText(" ", menu, out var _, 30);
             MenuHandler.CreateToggle(StreamerMode, "Enable Streamer Mode", menu, (bool val) => { StreamerMode = val; JoinUI.UpdateStreamerModeSettings(); LobbyUI.UpdateStreamerModeSettings(); });
             MenuHandler.CreateText(" ", menu, out var _, 30);
-            hostOnlyConfigToggle = MenuHandler.CreateToggle(onlyHostCanInviteConfig.Value, "Only host can invite", menu, (bool val) => { onlyHostCanInviteConfig.Value = val; });
+            hostOnlyConfigToggle = MenuHandler.CreateToggle(OnlyHostCanInvite, "Only host can invite", menu, (bool val) => { OnlyHostCanInvite = val; });
+        }
+
+        [UnboundRPC]
+        internal static void RPCS_Kick(int actorID)
+        {
+            if (PhotonNetwork.LocalPlayer.ActorNumber != actorID) { return; }
+            Unbound.Instance.StartCoroutine((IEnumerator)NetworkConnectionHandler.instance.InvokeMethod("DoDisconnect", "KICKED", "YOU HAVE BEEN KICKED FROM THE LOBBY"));
         }
     }
 }
