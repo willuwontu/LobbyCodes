@@ -29,7 +29,6 @@ namespace LobbyCodes.UI
             }
         }
 
-
         private static GameObject _BG = null;
 
         public static GameObject BG
@@ -541,14 +540,25 @@ namespace LobbyCodes.UI
             {
                 LobbyUI._dropdown.Show();
             }
+
+            LobbyUI._dropdown.RefreshShownValue();
         }
 
         public static Photon.Realtime.Player GetSelectedKickListPlayer()
         {
+            if (!(playerKickList.Count() > 0))
+            {
+                return null;
+            }
+
             return playerKickList[LobbyUI._dropdown.value];
         }
 
         private static GameObject _kickButton = null;
+
+        /// <summary>
+        /// The action run when the kick button is pressed. The input parameter is the player selected.
+        /// </summary>
         public static Action<Photon.Realtime.Player> kickButtonPressed = null;
 
         public static GameObject kickButton
@@ -583,7 +593,7 @@ namespace LobbyCodes.UI
                 var interact = kickbutton.AddComponent<ButtonInteraction>();
                 interact.mouseClick.AddListener(() =>
                 {
-                    if (kickButtonPressed != null)
+                    if (kickButtonPressed != null && playerKickList.Count() > 0)
                     {
                         try
                         {
