@@ -388,7 +388,7 @@ namespace LobbyCodes.UI
 
         private static Photon.Realtime.Player[] playerKickList;
 
-        public static void UpdateKickList(Photon.Realtime.Player[] players)
+        internal static void UpdateKickList(Photon.Realtime.Player[] players)
         {
             // Make Sure that the kicklist and dropdown fields exist
             var _ = kicklist;
@@ -414,7 +414,7 @@ namespace LobbyCodes.UI
         }
 
         private static GameObject _kickButton = null;
-        public static Action kickButtonPressed = null;
+        public static Action<Photon.Realtime.Player> kickButtonPressed = null;
 
         public static GameObject kickButton
         {
@@ -452,7 +452,7 @@ namespace LobbyCodes.UI
                     {
                         try
                         {
-                            kickButtonPressed();
+                            kickButtonPressed(playerKickList[LobbyUI._dropdown.value]);
                         }
                         catch (Exception e)
                         {
