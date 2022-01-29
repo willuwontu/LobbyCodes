@@ -11,6 +11,8 @@ using LobbyCodes.Networking;
 using LobbyCodes.UI;
 using UnboundLib.Utils.UI;
 using UnboundLib;
+using UnboundLib.Networking;
+using Photon.Pun;
 
 namespace LobbyCodes
 {
@@ -100,6 +102,13 @@ namespace LobbyCodes
             MenuHandler.CreateToggle(StreamerMode, "Enable Streamer Mode", menu, (bool val) => { StreamerMode = val; JoinUI.UpdateStreamerModeSettings(); LobbyUI.UpdateStreamerModeSettings(); });
             MenuHandler.CreateText(" ", menu, out var _, 30);
             hostOnlyConfigToggle = MenuHandler.CreateToggle(OnlyHostCanInvite, "Only host can invite", menu, (bool val) => { OnlyHostCanInvite = val; });
+        }
+
+        [UnboundRPC]
+        internal static void RPCS_Kick(int actorID)
+        {
+            if (PhotonNetwork.LocalPlayer.ActorNumber != actorID) { return; }
+            Unbound.Instance.StartCoroutine((IEnumerator)NetworkConnectionHandler.instance.InvokeMethod("DoDisconnect", "KICKED", "YOU HAVE BEEN KICKED FROM THE LOBBY"));
         }
     }
 }

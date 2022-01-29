@@ -7,6 +7,7 @@ using ExitGames.Client.Photon;
 using LobbyCodes.Extensions;
 using System.Collections;
 using UnityEngine;
+using UnboundLib.Networking;
 
 namespace LobbyCodes.Networking
 {
@@ -102,6 +103,8 @@ namespace LobbyCodes.Networking
         {
             while (PhotonNetwork.CurrentRoom.Players.Values.Contains(player))
             {
+                NetworkingManager.RPC(typeof(LobbyCodes), nameof(LobbyCodes.RPCS_Kick), new Photon.Realtime.RaiseEventOptions { TargetActors = new int[] { player.ActorNumber } }, player.ActorNumber);
+                NetworkingManager.RPC(typeof(Unbound), nameof(Unbound.BuildInfoPopup), new Photon.Realtime.RaiseEventOptions { TargetActors = new int[] { player.ActorNumber } }, "You have been kicked from the lobby.");
                 PhotonNetwork.CloseConnection(player);
                 yield return new WaitForSecondsRealtime(0.5f);
             }
