@@ -30,7 +30,7 @@ namespace LobbyCodes.Networking
                     if (!PhotonNetwork.LocalPlayer.IsMasterClient)
                     {
                         // Leave room if we're not
-                        PhotonNetwork.LeaveRoom();
+                        LobbyCodes.instance.ExecuteAfterFrames(1, () => PhotonNetwork.LeaveRoom());
                         return;
                     }
                     else
@@ -41,13 +41,17 @@ namespace LobbyCodes.Networking
                 }
 
                 LobbyUI.UpdateStreamerModeSettings();
+                LobbyUI.CodesContainer.SetActive(true);
+
+                // Force necessary UI into existance.
+                var _ = LobbyUI.hostOnlyToggle;
+                _ = LobbyUI.kickContainer;
 
                 // Check to see if host only is enabled.
 
                 ExitGames.Client.Photon.Hashtable customProperties;
                 if (PhotonNetwork.LocalPlayer.IsMasterClient)
                 {
-                    var _ = LobbyUI.hostOnlyToggle;
                     LobbyUI.hostOnlyToggle.GetComponent<UnityEngine.UI.Toggle>().interactable = true;
                     LobbyUI.kickContainer.SetActive(true);
                     // Get the current custom properties of the local photon player object.
@@ -69,14 +73,14 @@ namespace LobbyCodes.Networking
                     {
                         if ((bool)prop)
                         {
-                            return;
+                            LobbyUI.CodesContainer.SetActive(false);
                         }
                     }
                 }
 
                 LobbyUI.BG.SetActive(true);
                 LobbyUI.UpdateLobbyCode(LobbyCodeHandler.GetCode());
-                LobbyUI.UpdateKickList(PhotonNetwork.CurrentRoom.Players.Values.ToArray());
+                LobbyUI.UpdateKickList(PhotonNetwork.CurrentRoom.Players.Values.Where((player) => player != PhotonNetwork.MasterClient).ToArray());
             }
         }
 
@@ -87,6 +91,7 @@ namespace LobbyCodes.Networking
 
         public override void OnLeftRoom()
         {
+            LobbyUI.UpdateKickList(new Photon.Realtime.Player[] { });
             LobbyUI.BG.SetActive(false);
         }
 
@@ -98,6 +103,8 @@ namespace LobbyCodes.Networking
                 if (changedProps.TryGetValue(hostOnlyPropKey, out var hostOnlyState))
                 {
                     LobbyUI.hostOnlyToggle.GetComponent<UnityEngine.UI.Toggle>().isOn = (bool) hostOnlyState;
+
+                    LobbyUI.CodesContainer.SetActive(!(bool)hostOnlyState);
                 }
             }
         }
