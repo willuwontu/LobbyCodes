@@ -552,7 +552,7 @@ namespace LobbyCodes.UI
         /// <summary>
         /// The action run when the kick button is pressed. The input parameter is the player selected.
         /// </summary>
-        public static Action<Photon.Realtime.Player> kickButtonPressed = null;
+        //public static Action<Photon.Realtime.Player> kickButtonPressed = null;
 
         public static GameObject kickButton
         {
@@ -586,11 +586,11 @@ namespace LobbyCodes.UI
                 var interact = kickbutton.AddComponent<ButtonInteraction>();
                 interact.mouseClick.AddListener(() =>
                 {
-                    if (kickButtonPressed != null && playerKickList.Count() > 0)
+                    if (playerKickList.Count() > 0)
                     {
                         try
                         {
-                            kickButtonPressed(playerKickList[LobbyUI._dropdown.value]);
+                            LobbyMonitor.instance.ForceKickPlayer(playerKickList[LobbyUI._dropdown.value]);
                         }
                         catch (Exception e)
                         {

@@ -14,7 +14,7 @@ namespace LobbyCodes.Networking
     {
         public static LobbyMonitor instance {get; private set;}
 
-        private void Start()
+        private void Awake()
         {
             instance = this;
         }
@@ -76,14 +76,21 @@ namespace LobbyCodes.Networking
             {
                 if (PhotonNetwork.IsMasterClient)
                 {
-                    this.StartCoroutine(this.ForceKickPlayer(newPlayer));
+                    this.ForceKickPlayer(newPlayer);
                 }
-                
-                LobbyUI.UpdateKickList(PhotonNetwork.CurrentRoom.Players.Values.ToArray());
             }
+            LobbyUI.UpdateKickList(PhotonNetwork.CurrentRoom.Players.Values.Where(p => !p.IsMasterClient).ToArray());
+        }
+        public override void OnPlayerLeftRoom(Photon.Realtime.Player newPlayer)
+        {
+            LobbyUI.UpdateKickList(PhotonNetwork.CurrentRoom.Players.Values.Where(p => !p.IsMasterClient).ToArray());
         }
 
-        private IEnumerator ForceKickPlayer(Photon.Realtime.Player player)
+        public void ForceKickPlayer(Photon.Realtime.Player player)
+        {
+            this.StartCoroutine(this.IForceKickPlayer(player));
+        }
+        private IEnumerator IForceKickPlayer(Photon.Realtime.Player player)
         {
             while (PhotonNetwork.CurrentRoom.Players.Values.Contains(player))
             {
