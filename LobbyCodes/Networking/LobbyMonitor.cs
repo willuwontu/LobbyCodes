@@ -68,7 +68,10 @@ namespace LobbyCodes.Networking
 
                 LobbyUI.BG.SetActive(true);
                 LobbyUI.UpdateLobbyCode(LobbyCodeHandler.GetCode());
-                LobbyUI.UpdateKickList(PhotonNetwork.CurrentRoom.Players.Values.Where(player => player != PhotonNetwork.MasterClient).ToArray());
+                this.ExecuteAfterSeconds(1f, () =>
+                {
+                    LobbyUI.UpdateKickList(PhotonNetwork.CurrentRoom.Players.Values.Where(player => player != PhotonNetwork.MasterClient).ToArray());
+                });
             }
         }
 
@@ -81,7 +84,10 @@ namespace LobbyCodes.Networking
                     this.ForceKickPlayer(newPlayer);
                 }
             }
-            LobbyUI.UpdateKickList(PhotonNetwork.CurrentRoom.Players.Values.Where(p => !p.IsMasterClient).ToArray());
+            this.ExecuteAfterSeconds(1f, () =>
+            {
+                LobbyUI.UpdateKickList(PhotonNetwork.CurrentRoom.Players.Values.Where(player => player != PhotonNetwork.MasterClient).ToArray());
+            });
         }
         public override void OnPlayerLeftRoom(Photon.Realtime.Player newPlayer)
         {
