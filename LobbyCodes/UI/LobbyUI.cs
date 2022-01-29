@@ -161,7 +161,7 @@ namespace LobbyCodes.UI
                 // Get BG to make sure it exists.
                 GameObject _ = LobbyUI.hostOnlyContainer;
 
-                var unboundToggle = UnboundLib.Utils.UI.MenuHandler.CreateToggle(LobbyCodes.instance.onlyHostCanInviteConfig.Value, "Only host can invite:", BG, null, 30, false, null, null, null, TextAlignmentOptions.Right);
+                var unboundToggle = UnboundLib.Utils.UI.MenuHandler.CreateToggle(LobbyCodes.OnlyHostCanInvite, "Only host can invite:", BG, null, 30, false, null, null, null, TextAlignmentOptions.Right);
 
                 var bgImage = unboundToggle.transform.GetChild(0).gameObject.GetComponent<Image>();
                 var checkImage = unboundToggle.transform.GetChild(0).GetChild(0).gameObject.GetComponent<Image>();
@@ -208,11 +208,11 @@ namespace LobbyCodes.UI
                 image.material = checkImage.material;
 
                 toggle.graphic = image;
-                toggle.isOn = LobbyCodes.instance.onlyHostCanInviteConfig.Value;
+                toggle.isOn = LobbyCodes.OnlyHostCanInvite;
 
                 toggle.onValueChanged.AddListener((value) =>
                 {
-                    LobbyCodes.instance.onlyHostCanInviteConfig.Value = value;
+                    LobbyCodes.OnlyHostCanInvite = value;
                     LobbyCodes.instance.hostOnlyConfigToggle.GetComponent<Toggle>().isOn = value;
                     if (PhotonNetwork.LocalPlayer.IsMasterClient)
                     {

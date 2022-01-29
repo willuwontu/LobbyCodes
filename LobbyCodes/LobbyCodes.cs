@@ -24,7 +24,6 @@ namespace LobbyCodes
         private static readonly string CompatibilityModName = ModName.Replace(" ","");
         public const string Version = "1.0.0"; // What version are we on (major.minor.patch)?
 
-        internal ConfigEntry<bool> onlyHostCanInviteConfig;
         internal GameObject hostOnlyConfigToggle;
 
         internal AssetBundle assets = null;
@@ -51,8 +50,6 @@ namespace LobbyCodes
 
             this.gameObject.AddComponent<LobbyMonitor>();
 
-            onlyHostCanInviteConfig = Config.Bind("LobbyCodes", "HostOnly", false, "If enabled only the host can invite players.");
-
             assets = AssetUtils.LoadAssetBundleFromResources("lobbycodes", typeof(LobbyCodes).Assembly);
             click = assets.LoadAllAssets<AudioClip>().ToList().Where(clip => clip.name.Contains("UI_Button_Click")).ToList();
             hover = assets.LoadAllAssets<AudioClip>().ToList().Where(clip => clip.name.Contains("UI_Button_Hover")).ToList();
@@ -77,6 +74,17 @@ namespace LobbyCodes
                 PlayerPrefs.SetInt(GetConfigKey("StreamerMode"), value ? 1 : 0);
             }
         }
+        public static bool OnlyHostCanInvite
+        {
+            get
+            {
+                return PlayerPrefs.GetInt(GetConfigKey("OnlyHostCanInvite"), 0) == 1;
+            }
+            internal set
+            {
+                PlayerPrefs.SetInt(GetConfigKey("OnlyHostCanInvite"), value ? 1 : 0);
+            }
+        }
 
         private IEnumerator GameStart(IGameModeHandler gm)
         {
@@ -91,7 +99,7 @@ namespace LobbyCodes
             MenuHandler.CreateText(" ", menu, out var _, 30);
             MenuHandler.CreateToggle(StreamerMode, "Enable Streamer Mode", menu, (bool val) => { StreamerMode = val; JoinUI.UpdateStreamerModeSettings(); LobbyUI.UpdateStreamerModeSettings(); });
             MenuHandler.CreateText(" ", menu, out var _, 30);
-            hostOnlyConfigToggle = MenuHandler.CreateToggle(onlyHostCanInviteConfig.Value, "Only host can invite", menu, (bool val) => { onlyHostCanInviteConfig.Value = val; });
+            hostOnlyConfigToggle = MenuHandler.CreateToggle(OnlyHostCanInvite, "Only host can invite", menu, (bool val) => { OnlyHostCanInvite = val; });
         }
     }
 }

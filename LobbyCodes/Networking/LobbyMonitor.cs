@@ -57,7 +57,7 @@ namespace LobbyCodes.Networking
 
                     LobbyUI.hostOnlyToggle.GetComponent<UnityEngine.UI.Toggle>().interactable = true;
                     LobbyUI.kickContainer.SetActive(true);
-                    PhotonNetwork.LocalPlayer.SetOnlyHostCanInvite(LobbyCodes.instance.onlyHostCanInviteConfig.Value);
+                    PhotonNetwork.LocalPlayer.SetOnlyHostCanInvite(LobbyCodes.OnlyHostCanInvite);
                 }
                 else
                 {
