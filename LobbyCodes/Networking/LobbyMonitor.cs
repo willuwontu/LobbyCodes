@@ -117,6 +117,7 @@ namespace LobbyCodes.Networking
 
                 LobbyUI.CodesContainer.SetActive(!(bool)PhotonNetwork.MasterClient.OnlyHostCanInvite());
             }
+
         }
     }
 }
