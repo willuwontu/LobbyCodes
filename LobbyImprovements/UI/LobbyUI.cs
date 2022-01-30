@@ -20,6 +20,12 @@ namespace LobbyImprovements.UI
         internal static void UpdateStreamerModeSettings()
         {
             LobbyUI.input.SetActive(!LobbyImprovements.StreamerMode);
+            LobbyUI.BG.SetActive(false);
+        }
+        internal static void UpdateHostOnlySettings()
+        {
+            LobbyUI.hostOnlyToggle.GetComponent<Toggle>().isOn = LobbyImprovements.OnlyHostCanInvite;
+            LobbyUI.BG.SetActive(false);
         }
 
         private static GameObject uiCanvas
