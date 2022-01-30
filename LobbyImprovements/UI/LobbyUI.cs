@@ -734,7 +734,7 @@ namespace LobbyImprovements.UI
                         text.font = font;
                         text.fontMaterials = fontMaterials;
                     }
-                    text.text = "You shouldn't see this ...";
+                    text.text = "";
                     text.enableAutoSizing = true;
                     text.alignment = TextAlignmentOptions.Right;
                 }

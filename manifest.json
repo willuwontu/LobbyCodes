@@ -4,7 +4,7 @@
     "version_number":"1.0.0",
 	"website_url":"https://github.com/willuwontu/LobbyCodes",
 	"displayName":"Lobby Improvements",
-	"description":"Gives the option to join lobbies with codes rather than steam invites, along with other improvements for the game lobby.",
+	"description":"Adds several quality of life improvements to online lobbies.",
 	"dependencies": [
 	    "willis81808-UnboundLib-2.10.2",
 		"willis81808-MMHook-1.0.0",
