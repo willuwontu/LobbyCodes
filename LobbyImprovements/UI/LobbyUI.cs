@@ -514,7 +514,7 @@ namespace LobbyImprovements.UI
                 var flipper = kick.AddComponent<FlipArrowOnExpansion>();
                 flipper.arrow = arrow;
 
-                dropdown.AddOptions(new List<TMP_Dropdown.OptionData> { new TMP_Dropdown.OptionData("Fuck"), new TMP_Dropdown.OptionData("this"), new TMP_Dropdown.OptionData("was"), new TMP_Dropdown.OptionData("a"), new TMP_Dropdown.OptionData("pain"), new TMP_Dropdown.OptionData("in"), new TMP_Dropdown.OptionData("the"), new TMP_Dropdown.OptionData("ass"), new TMP_Dropdown.OptionData("to"), new TMP_Dropdown.OptionData("set"), new TMP_Dropdown.OptionData("up") });
+                dropdown.AddOptions(new List<TMP_Dropdown.OptionData> { });
 
                 return LobbyUI._kicklist;
             }
