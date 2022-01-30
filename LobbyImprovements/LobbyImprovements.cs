@@ -65,6 +65,10 @@ namespace LobbyImprovements
 
             JoinUI.Init();
 
+            Unbound.RegisterClientSideMod(ModId);
+
+            Unbound.RegisterCredits(ModName, new string[] {"willuwontu (Project Creation, UI)", "Pykess (Backend)" }, new string[] {"Support willuwontu", "Support Pykess" }, new string[] {"https://ko-fi.com/willuwontu", "https://ko-fi.com/pykess" });
+
             Unbound.RegisterMenu(ModName, () => { }, GUI, null, false);
 
             GameModeManager.AddHook(GameModeHooks.HookGameStart, GameStart);
