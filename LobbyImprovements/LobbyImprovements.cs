@@ -7,23 +7,23 @@ using BepInEx.Configuration;
 using UnboundLib.GameModes;
 using UnityEngine;
 using Jotunn.Utils;
-using LobbyCodes.Networking;
-using LobbyCodes.UI;
+using LobbyImprovements.Networking;
+using LobbyImprovements.UI;
 using UnboundLib.Utils.UI;
 using UnboundLib;
 using UnboundLib.Networking;
 using Photon.Pun;
 using HarmonyLib;
 
-namespace LobbyCodes
+namespace LobbyImprovements
 {
     [BepInDependency("com.willis.rounds.unbound", BepInDependency.DependencyFlags.HardDependency)]
     [BepInPlugin(ModId, ModName, Version)]
     [BepInProcess("Rounds.exe")]
-    public class LobbyCodes : BaseUnityPlugin
+    public class LobbyImprovements : BaseUnityPlugin
     {
-        private const string ModId = "com.roundsmoddingcommunity.rounds.LobbyCodes";
-        private const string ModName = "Lobby Codes";
+        private const string ModId = "com.roundsmoddingcommunity.rounds.LobbyImprovements";
+        private const string ModName = "Lobby Improvements";
         private static readonly string CompatibilityModName = ModName.Replace(" ","");
         public const string Version = "1.0.0"; // What version are we on (major.minor.patch)?
 
@@ -35,7 +35,7 @@ namespace LobbyCodes
         public List<AudioClip> hover;
 
         private static Harmony harmony;
-        public static LobbyCodes instance { get; private set; }
+        public static LobbyImprovements instance { get; private set; }
 
 #if DEBUG
         internal static bool DEBUG = true;
@@ -59,7 +59,7 @@ namespace LobbyCodes
 
             this.gameObject.AddComponent<LobbyMonitor>();
 
-            assets = AssetUtils.LoadAssetBundleFromResources("lobbycodes", typeof(LobbyCodes).Assembly);
+            assets = AssetUtils.LoadAssetBundleFromResources("lobbycodes", typeof(LobbyImprovements).Assembly);
             click = assets.LoadAllAssets<AudioClip>().ToList().Where(clip => clip.name.Contains("UI_Button_Click")).ToList();
             hover = assets.LoadAllAssets<AudioClip>().ToList().Where(clip => clip.name.Contains("UI_Button_Hover")).ToList();
 
@@ -70,7 +70,7 @@ namespace LobbyCodes
             GameModeManager.AddHook(GameModeHooks.HookGameStart, GameStart);
         }
 
-        public static string GetConfigKey(string key) => $"{LobbyCodes.CompatibilityModName}_{key}";
+        public static string GetConfigKey(string key) => $"{LobbyImprovements.CompatibilityModName}_{key}";
 
         public static bool StreamerMode
         {

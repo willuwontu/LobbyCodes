@@ -1,9 +1,9 @@
-﻿namespace LobbyCodes.Extensions
+﻿namespace LobbyImprovements.Extensions
 {
     public static class PhotonPlayerExtensions
     {
         public static void SetProperty(this Photon.Realtime.Player instance, string key, object value) {
-            var propKey = LobbyCodes.GetConfigKey(key);
+            var propKey = LobbyImprovements.GetConfigKey(key);
             var props = instance.CustomProperties;
 
             if (!props.ContainsKey(propKey)) {
@@ -16,7 +16,7 @@
         }
 
         public static T GetProperty<T>(this Photon.Realtime.Player instance, string key) {
-            var propKey = LobbyCodes.GetConfigKey(key);
+            var propKey = LobbyImprovements.GetConfigKey(key);
             var props = instance.CustomProperties;
 
             if (!props.ContainsKey(propKey)) {
@@ -34,7 +34,7 @@
             return instance.GetProperty<bool>("modded");
         }
 
-        private static readonly string HostInvitedKey = LobbyCodes.GetConfigKey("InviteFromHost");
+        private static readonly string HostInvitedKey = LobbyImprovements.GetConfigKey("InviteFromHost");
         public static bool WasInvitedByHost(this Photon.Realtime.Player instance)
         {
             return instance.GetProperty<bool>(PhotonPlayerExtensions.HostInvitedKey);

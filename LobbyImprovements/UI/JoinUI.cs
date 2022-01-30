@@ -1,12 +1,12 @@
 ﻿using UnboundLib.Utils.UI;
 using UnityEngine;
 using UnityEngine.UI;
-using LobbyCodes.Networking;
+using LobbyImprovements.Networking;
 using UnityEngine.SceneManagement;
 using UnboundLib;
 using TMPro;
 
-namespace LobbyCodes.UI
+namespace LobbyImprovements.UI
 {
     static class JoinUI
     {
@@ -16,9 +16,9 @@ namespace LobbyCodes.UI
 
         internal static void UpdateStreamerModeSettings()
         {
-            StreamerModeText.text = LobbyCodes.StreamerMode ? "STREAMER MODE ENABLED" : "";
-            LobbyInputField.readOnly = LobbyCodes.StreamerMode;
-            ((TextMeshProUGUI)LobbyInputField.placeholder).text = LobbyCodes.StreamerMode ? "COPY CODE TO CLIPBOARD THEN PRESS JOIN" : "ENTER LOBBY CODE";
+            StreamerModeText.text = LobbyImprovements.StreamerMode ? "STREAMER MODE ENABLED" : "";
+            LobbyInputField.readOnly = LobbyImprovements.StreamerMode;
+            ((TextMeshProUGUI)LobbyInputField.placeholder).text = LobbyImprovements.StreamerMode ? "COPY CODE TO CLIPBOARD THEN PRESS JOIN" : "ENTER LOBBY CODE";
         }
 
         static void SetupUI(bool firstTime)
@@ -35,15 +35,15 @@ namespace LobbyCodes.UI
                 int siblingIndex = spaceGo != null ? spaceGo.GetSiblingIndex() + 1 : inviteGo != null ? inviteGo.GetSiblingIndex() : 4;
                 var joinMenu = MenuHandler.CreateMenu("JOIN LOBBY", () => { }, onlineGo.gameObject, 60, true, false, null, true, siblingIndex);
                 MenuHandler.CreateText("ENTER LOBBY CODE", joinMenu, out var _);
-                MenuHandler.CreateText(LobbyCodes.StreamerMode ? "STREAMER MODE ENABLED" : "", joinMenu, out StreamerModeText, 30, color: new Color32(145, 70, 255, 255));
+                MenuHandler.CreateText(LobbyImprovements.StreamerMode ? "STREAMER MODE ENABLED" : "", joinMenu, out StreamerModeText, 30, color: new Color32(145, 70, 255, 255));
                 StreamerModeText.fontStyle = FontStyles.Bold;
                 MenuHandler.CreateText(" ", joinMenu, out TextMeshProUGUI status, 30, color: Color.red);
                 MenuHandler.CreateText(" ", joinMenu, out TextMeshProUGUI _, 30);
-                var inputField = MenuHandler.CreateInputField(LobbyCodes.StreamerMode ? "COPY CODE TO CLIPBOARD THEN PRESS JOIN" : "ENTER LOBBY CODE", 60, joinMenu, (string str) => JoinUI.currentCode = str);
+                var inputField = MenuHandler.CreateInputField(LobbyImprovements.StreamerMode ? "COPY CODE TO CLIPBOARD THEN PRESS JOIN" : "ENTER LOBBY CODE", 60, joinMenu, (string str) => JoinUI.currentCode = str);
                 inputField.transform.localScale = 2f * Vector3.one;
                 LobbyInputField = inputField.GetComponentInChildren<TMP_InputField>();
-                LobbyInputField.readOnly = LobbyCodes.StreamerMode;
-                ((TextMeshProUGUI)LobbyInputField.placeholder).text = LobbyCodes.StreamerMode ? "COPY CODE TO CLIPBOARD THEN PRESS JOIN" : "ENTER LOBBY CODE";
+                LobbyInputField.readOnly = LobbyImprovements.StreamerMode;
+                ((TextMeshProUGUI)LobbyInputField.placeholder).text = LobbyImprovements.StreamerMode ? "COPY CODE TO CLIPBOARD THEN PRESS JOIN" : "ENTER LOBBY CODE";
                 foreach (TMP_Text text in inputField.GetComponentsInChildren<TMP_Text>())
                 {
                     text.alignment = TextAlignmentOptions.Center;

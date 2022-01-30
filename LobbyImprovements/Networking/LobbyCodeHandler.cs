@@ -1,10 +1,10 @@
 ﻿using Photon.Pun;
-using LobbyCodes.Utils;
+using LobbyImprovements.Utils;
 using System;
 using System.Linq;
-using LobbyCodes.Extensions;
+using LobbyImprovements.Extensions;
 
-namespace LobbyCodes.Networking
+namespace LobbyImprovements.Networking
 {
     public static class LobbyCodeHandler
     {
@@ -71,8 +71,8 @@ namespace LobbyCodes.Networking
                 string[] reg_room = pureCode.Split(':');
                 string region = reg_room[0];
                 string room = reg_room[1];
-                LobbyCodes.Log($"Code sent from host?: {fromHost}");
-                LobbyCodes.Log($"Code: {region}:{room}");
+                LobbyImprovements.Log($"Code sent from host?: {fromHost}");
+                LobbyImprovements.Log($"Code: {region}:{room}");
                 if (!CodePrefix.Contains(region) || !room.All(char.IsDigit) || region == INVALIDREGION || reg_room.Count() != 2)
                 {
                     throw new FormatException();

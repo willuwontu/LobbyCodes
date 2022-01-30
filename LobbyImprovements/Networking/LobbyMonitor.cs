@@ -1,17 +1,17 @@
 ﻿using System.Linq;
 using Photon.Pun;
 using UnboundLib;
-using LobbyCodes.UI;
-using LobbyCodes.Networking;
+using LobbyImprovements.UI;
+using LobbyImprovements.Networking;
 using ExitGames.Client.Photon;
-using LobbyCodes.Extensions;
+using LobbyImprovements.Extensions;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnboundLib.Networking;
 using System.Linq;
 
-namespace LobbyCodes.Networking
+namespace LobbyImprovements.Networking
 {
     public class LobbyMonitor : MonoBehaviourPunCallbacks
     {
@@ -43,7 +43,7 @@ namespace LobbyCodes.Networking
                     if (!PhotonNetwork.LocalPlayer.IsMasterClient)
                     {
                         // Leave room if we're not
-                        LobbyCodes.instance.ExecuteAfterFrames(1, () => PhotonNetwork.LeaveRoom());
+                        LobbyImprovements.instance.ExecuteAfterFrames(1, () => PhotonNetwork.LeaveRoom());
                         return;
                     }
                     else
@@ -67,7 +67,7 @@ namespace LobbyCodes.Networking
                 {
                     LobbyUI.hostOnlyToggle.GetComponent<UnityEngine.UI.Toggle>().interactable = true;
                     LobbyUI.kickContainer.SetActive(true);
-                    PhotonNetwork.LocalPlayer.SetOnlyHostCanInvite(LobbyCodes.OnlyHostCanInvite);
+                    PhotonNetwork.LocalPlayer.SetOnlyHostCanInvite(LobbyImprovements.OnlyHostCanInvite);
                 }
                 else
                 {
@@ -119,7 +119,7 @@ namespace LobbyCodes.Networking
         {
             while (PhotonNetwork.CurrentRoom.Players.Values.Contains(player))
             {
-                NetworkingManager.RPC(typeof(LobbyCodes), nameof(LobbyCodes.RPCS_Kick), new Photon.Realtime.RaiseEventOptions { TargetActors = new int[] { player.ActorNumber } }, player.ActorNumber);
+                NetworkingManager.RPC(typeof(LobbyImprovements), nameof(LobbyImprovements.RPCS_Kick), new Photon.Realtime.RaiseEventOptions { TargetActors = new int[] { player.ActorNumber } }, player.ActorNumber);
                 NetworkingManager.RPC(typeof(Unbound), nameof(Unbound.BuildInfoPopup), new Photon.Realtime.RaiseEventOptions { TargetActors = new int[] { player.ActorNumber } }, "You have been kicked from the lobby.");
                 PhotonNetwork.CloseConnection(player);
                 yield return new WaitForSecondsRealtime(0.5f);

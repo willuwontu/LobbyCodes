@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using LobbyCodes.Networking;
+using LobbyImprovements.Networking;
 using UnityEngine;
 using System.Linq;
 
-namespace LobbyCodes.Utils
+namespace LobbyImprovements.Utils
 {
     public static class ObfuscateJoinCode
     {
@@ -23,12 +23,12 @@ namespace LobbyCodes.Utils
 
         private static int GetRegionNumber(string region)
         {
-            LobbyCodes.Log("REGION: " + region);
+            LobbyImprovements.Log("REGION: " + region);
             return LobbyCodeHandler.CodePrefix.Length * UnityEngine.Random.Range(0, LobbyCodeHandler.CodePrefix.Length) + Array.IndexOf(LobbyCodeHandler.CodePrefix, region); 
         }
         private static string GetRegionCode(int region)
         {
-            LobbyCodes.Log("REGION NUMBER: " + region.ToString());
+            LobbyImprovements.Log("REGION NUMBER: " + region.ToString());
             return LobbyCodeHandler.CodePrefix[mod(region, LobbyCodeHandler.CodePrefix.Length)];
         }
         public static string LongToBase(long value)
