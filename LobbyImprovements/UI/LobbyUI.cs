@@ -19,20 +19,39 @@ namespace LobbyImprovements.UI
 
         internal static void UpdateStreamerModeSettings()
         {
+            if (!PhotonNetwork.InRoom)
+            {
+                LobbyUI.BG.GetComponent<RectTransform>().anchorMax = new Vector2(2, 2); 
+            }
             LobbyUI.input.SetActive(!LobbyImprovements.StreamerMode);
             LobbyUI.text.GetComponent<TextMeshProUGUI>().text = LobbyImprovements.StreamerMode ? "STREAMER MODE" : "Lobby Code:";
             LobbyUI.text.GetComponent<TextMeshProUGUI>().color = LobbyImprovements.StreamerMode ? new Color32(145, 70, 255, 255) : new Color32(255, 255, 255, (int) (0.8f * 255));
             LobbyUI.text.GetComponent<TextMeshProUGUI>().fontStyle = FontStyles.Bold;
             LobbyUI.text.SetActive(LobbyImprovements.StreamerMode);
-            LobbyUI.BG.SetActive(false);
+            LobbyImprovements.instance.ExecuteAfterFrames(3, () =>
+            {
+                if (!PhotonNetwork.InRoom)
+                {
+                    LobbyUI.BG.SetActive(false);
+                }
+                LobbyUI.BG.GetComponent<RectTransform>().anchorMax = new Vector2(1, 1);
+            });
         }
         internal static void UpdateHostOnlySettings()
         {
-            LobbyUI.hostOnlyToggle.GetComponent<Toggle>().isOn = LobbyImprovements.OnlyHostCanInvite;
             if (!PhotonNetwork.InRoom)
             {
-                LobbyUI.BG.SetActive(false); 
+                LobbyUI.BG.GetComponent<RectTransform>().anchorMax = new Vector2(2, 2);
             }
+            LobbyUI.hostOnlyToggle.GetComponent<Toggle>().isOn = LobbyImprovements.OnlyHostCanInvite;
+            LobbyImprovements.instance.ExecuteAfterFrames(3, () =>
+            {
+                if (!PhotonNetwork.InRoom)
+                {
+                    LobbyUI.BG.SetActive(false);
+                    LobbyUI.BG.GetComponent<RectTransform>().anchorMax = new Vector2(1, 1);
+                }
+            });
         }
 
         private static GameObject uiCanvas
@@ -56,7 +75,7 @@ namespace LobbyImprovements.UI
 
                 if (LobbyUI._BG != null) { return LobbyUI._BG; }
 
-                LobbyUI._BG = new GameObject("LobbyImprovementsBG", typeof(RectTransform), typeof(VerticalLayoutGroup), typeof(Nudge));
+                LobbyUI._BG = new GameObject("LobbyImprovementsBG", typeof(RectTransform), typeof(VerticalLayoutGroup));
                 LobbyUI._BG.transform.SetParent(LobbyUI.uiCanvas.transform);
 
                 RectTransform rect = LobbyUI._BG.GetComponent<RectTransform>();
@@ -80,18 +99,6 @@ namespace LobbyImprovements.UI
                 LobbyImprovements.instance.ExecuteAfterFrames(5, LobbyUI.SortChildren);
 
                 return LobbyUI._BG;
-            }
-        }
-
-        private class Nudge : MonoBehaviour
-        {
-            private void Awake()
-            {
-                LobbyImprovements.instance.ExecuteAfterFrames(2, () => 
-                {
-                    LobbyUI.hostOnlyContainer.transform.SetAsFirstSibling();
-                });
-                LobbyImprovements.instance.ExecuteAfterFrames(5, LobbyUI.SortChildren);
             }
         }
 
@@ -612,7 +619,7 @@ namespace LobbyImprovements.UI
                 var interact = kickbutton.AddComponent<ButtonInteraction>();
                 interact.mouseClick.AddListener(() =>
                 {
-                    if (playerKickList.Count() > 0)
+                    if (playerKickList.Count() > 0 && PhotonNetwork.LocalPlayer.IsMasterClient)
                     {
                         Unbound.BuildModal()
                             .Title("Kick Player")
@@ -1078,18 +1085,27 @@ namespace LobbyImprovements.UI
 
             public void OnEnter()
             {
-                source.PlayOneShot(LobbyImprovements.instance.hover[random.Next(LobbyImprovements.instance.hover.Count)]);
+                if (button.interactable)
+                {
+                    source.PlayOneShot(LobbyImprovements.instance.hover[random.Next(LobbyImprovements.instance.hover.Count)]);
+                }
             }
 
             public void OnExit()
             {
-                source.PlayOneShot(LobbyImprovements.instance.hover[random.Next(LobbyImprovements.instance.hover.Count)]);
+                if (button.interactable)
+                {
+                    source.PlayOneShot(LobbyImprovements.instance.hover[random.Next(LobbyImprovements.instance.hover.Count)]);
+                }
             }
 
             public void OnClick()
             {
-                source.PlayOneShot(LobbyImprovements.instance.click[random.Next(LobbyImprovements.instance.click.Count)]);
-                EventSystem.current.SetSelectedGameObject(null);
+                if (button.interactable)
+                {
+                    source.PlayOneShot(LobbyImprovements.instance.click[random.Next(LobbyImprovements.instance.click.Count)]);
+                    EventSystem.current.SetSelectedGameObject(null);
+                }
             }
 
             public void OnPointerEnter(PointerEventData eventData)
