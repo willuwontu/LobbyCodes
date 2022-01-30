@@ -112,7 +112,7 @@ namespace LobbyImprovements
             MenuHandler.CreateText(" ", menu, out var _, 30);
             MenuHandler.CreateToggle(StreamerMode, "Enable Streamer Mode", menu, (bool val) => { StreamerMode = val; JoinUI.UpdateStreamerModeSettings(); LobbyUI.UpdateStreamerModeSettings(); });
             MenuHandler.CreateText(" ", menu, out var _, 30);
-            hostOnlyConfigToggle = MenuHandler.CreateToggle(OnlyHostCanInvite, "Only host can invite", menu, (bool val) => { OnlyHostCanInvite = val; });
+            hostOnlyConfigToggle = MenuHandler.CreateToggle(OnlyHostCanInvite, "Only host can invite", menu, (bool val) => { OnlyHostCanInvite = val; LobbyUI.UpdateHostOnlySettings(); });
         }
 
         [UnboundRPC]
