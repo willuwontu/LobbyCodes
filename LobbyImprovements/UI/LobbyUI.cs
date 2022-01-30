@@ -20,7 +20,7 @@ namespace LobbyImprovements.UI
         internal static void UpdateStreamerModeSettings()
         {
             LobbyUI.input.SetActive(!LobbyImprovements.StreamerMode);
-            LobbyUI.text.GetComponent<TextMeshProUGUI>().text = LobbyImprovements.StreamerMode ? "STREAM MODE" : "Lobby Code:";
+            LobbyUI.text.GetComponent<TextMeshProUGUI>().text = LobbyImprovements.StreamerMode ? "STREAMER MODE" : "Lobby Code:";
             LobbyUI.text.GetComponent<TextMeshProUGUI>().color = LobbyImprovements.StreamerMode ? new Color32(145, 70, 255, 255) : new Color32(255, 255, 255, (int) (0.8f * 255));
             LobbyUI.text.GetComponent<TextMeshProUGUI>().fontStyle = FontStyles.Bold;
             LobbyUI.text.SetActive(LobbyImprovements.StreamerMode);
