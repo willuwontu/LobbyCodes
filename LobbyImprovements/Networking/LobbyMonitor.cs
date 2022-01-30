@@ -58,22 +58,13 @@ namespace LobbyImprovements.Networking
                 _ = LobbyUI.kickContainer;
 
                 LobbyUI.UpdateStreamerModeSettings();
-                LobbyUI.CodesContainer.SetActive(true);
+                LobbyUI.CodesContainer.SetActive((PhotonNetwork.LocalPlayer.IsMasterClient || !PhotonNetwork.MasterClient.OnlyHostCanInvite()));
+                LobbyUI.kickContainer.SetActive(PhotonNetwork.LocalPlayer.IsMasterClient);
                 LobbyUI.hostOnlyToggle.GetComponent<UnityEngine.UI.Toggle>().interactable = PhotonNetwork.LocalPlayer.IsMasterClient;
-
-                // Check to see if host only is enabled.
 
                 if (PhotonNetwork.LocalPlayer.IsMasterClient)
                 {
-                    LobbyUI.hostOnlyToggle.GetComponent<UnityEngine.UI.Toggle>().interactable = true;
-                    LobbyUI.kickContainer.SetActive(true);
                     PhotonNetwork.LocalPlayer.SetOnlyHostCanInvite(LobbyImprovements.OnlyHostCanInvite);
-                }
-                else
-                {
-                    LobbyUI.hostOnlyToggle.GetComponent<UnityEngine.UI.Toggle>().interactable = false;
-                    LobbyUI.kickContainer.SetActive(false);
-                    LobbyUI.CodesContainer.SetActive(!PhotonNetwork.MasterClient.OnlyHostCanInvite());
                 }
 
                 // clear the kickedUserIDs
