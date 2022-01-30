@@ -20,6 +20,10 @@ namespace LobbyImprovements.UI
         internal static void UpdateStreamerModeSettings()
         {
             LobbyUI.input.SetActive(!LobbyImprovements.StreamerMode);
+            LobbyUI.text.GetComponent<TextMeshProUGUI>().text = LobbyImprovements.StreamerMode ? "STREAM MODE" : "Lobby Code:";
+            LobbyUI.text.GetComponent<TextMeshProUGUI>().color = LobbyImprovements.StreamerMode ? new Color32(145, 70, 255, 255) : new Color32(255, 255, 255, (int) (0.8f * 255));
+            LobbyUI.text.GetComponent<TextMeshProUGUI>().fontStyle = FontStyles.Bold;
+            LobbyUI.text.SetActive(LobbyImprovements.StreamerMode);
         }
 
         private static GameObject uiCanvas
@@ -43,7 +47,7 @@ namespace LobbyImprovements.UI
 
                 if (LobbyUI._BG != null) { return LobbyUI._BG; }
 
-                LobbyUI._BG = new GameObject("LobbyCodesBG", typeof(RectTransform), typeof(VerticalLayoutGroup));
+                LobbyUI._BG = new GameObject("LobbyImprovementsBG", typeof(RectTransform), typeof(VerticalLayoutGroup));
                 LobbyUI._BG.transform.SetParent(LobbyUI.uiCanvas.transform);
 
                 RectTransform rect = LobbyUI._BG.GetComponent<RectTransform>();
@@ -820,7 +824,7 @@ namespace LobbyImprovements.UI
                 RectTransform rect = LobbyUI._text.GetComponent<RectTransform>();
                 rect.localScale = new Vector3(1, 1, 1);
                 rect.pivot = new Vector2(0.5f, 0.5f);
-                rect.sizeDelta = new Vector2(200, 80);
+                rect.sizeDelta = new Vector2(300, 80);
 
                 var text = LobbyUI._text.GetComponent<TextMeshProUGUI>();
                 if (localGo)
