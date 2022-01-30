@@ -95,10 +95,14 @@ namespace LobbyImprovements.Networking
         }
         public static ExitCode ConnectToRoom(string obfuscatedCode)
         {
-            if (string.IsNullOrEmpty(obfuscatedCode)) { return ExitCode.Empty; }
+            if (string.IsNullOrWhiteSpace(obfuscatedCode)) { return ExitCode.Empty; }
             try
             {
-                return PureConnectToRoom(ObfuscateJoinCode.DeObfuscate(obfuscatedCode));
+                // trim whitespace by splitting the string at every whitespace and taking the first piece that is non-whitespace
+                string trimmed = obfuscatedCode.Split((char[])null, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
+                if (string.IsNullOrWhiteSpace(trimmed)) { return ExitCode.Empty; }
+
+                return PureConnectToRoom(ObfuscateJoinCode.DeObfuscate(trimmed));
             }
             catch (IndexOutOfRangeException)
             {

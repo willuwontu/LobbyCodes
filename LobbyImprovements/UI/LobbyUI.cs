@@ -24,6 +24,12 @@ namespace LobbyImprovements.UI
             LobbyUI.text.GetComponent<TextMeshProUGUI>().color = LobbyImprovements.StreamerMode ? new Color32(145, 70, 255, 255) : new Color32(255, 255, 255, (int) (0.8f * 255));
             LobbyUI.text.GetComponent<TextMeshProUGUI>().fontStyle = FontStyles.Bold;
             LobbyUI.text.SetActive(LobbyImprovements.StreamerMode);
+            LobbyUI.BG.SetActive(false);
+        }
+        internal static void UpdateHostOnlySettings()
+        {
+            LobbyUI.hostOnlyToggle.GetComponent<Toggle>().isOn = LobbyImprovements.OnlyHostCanInvite;
+            LobbyUI.BG.SetActive(false);
         }
 
         private static GameObject uiCanvas
