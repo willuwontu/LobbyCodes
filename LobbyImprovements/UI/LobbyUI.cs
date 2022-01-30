@@ -29,7 +29,10 @@ namespace LobbyImprovements.UI
         internal static void UpdateHostOnlySettings()
         {
             LobbyUI.hostOnlyToggle.GetComponent<Toggle>().isOn = LobbyImprovements.OnlyHostCanInvite;
-            LobbyUI.BG.SetActive(false);
+            if (!PhotonNetwork.InRoom)
+            {
+                LobbyUI.BG.SetActive(false); 
+            }
         }
 
         private static GameObject uiCanvas
@@ -53,7 +56,7 @@ namespace LobbyImprovements.UI
 
                 if (LobbyUI._BG != null) { return LobbyUI._BG; }
 
-                LobbyUI._BG = new GameObject("LobbyImprovementsBG", typeof(RectTransform), typeof(VerticalLayoutGroup));
+                LobbyUI._BG = new GameObject("LobbyImprovementsBG", typeof(RectTransform), typeof(VerticalLayoutGroup), typeof(Nudge));
                 LobbyUI._BG.transform.SetParent(LobbyUI.uiCanvas.transform);
 
                 RectTransform rect = LobbyUI._BG.GetComponent<RectTransform>();
@@ -77,6 +80,18 @@ namespace LobbyImprovements.UI
                 LobbyImprovements.instance.ExecuteAfterFrames(5, LobbyUI.SortChildren);
 
                 return LobbyUI._BG;
+            }
+        }
+
+        private class Nudge : MonoBehaviour
+        {
+            private void Awake()
+            {
+                LobbyImprovements.instance.ExecuteAfterFrames(2, () => 
+                {
+                    LobbyUI.hostOnlyContainer.transform.SetAsFirstSibling();
+                });
+                LobbyImprovements.instance.ExecuteAfterFrames(5, LobbyUI.SortChildren);
             }
         }
 
@@ -146,7 +161,7 @@ namespace LobbyImprovements.UI
                 rect.pivot = new Vector2(0.5f, 0.5f);
                 rect.offsetMin = new Vector2(0, 0);
                 rect.offsetMax = new Vector2(0, 0);
-                rect.sizeDelta = new Vector2(265, 40);
+                rect.sizeDelta = new Vector2(318.125f, 40);
 
                 var text = LobbyUI._hostOnlyText.GetComponent<TextMeshProUGUI>();
                 text.font = font;
