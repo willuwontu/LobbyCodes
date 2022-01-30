@@ -6,7 +6,7 @@ Adds several quality of life improvements to online lobbies.
 ## Lobby Codes
 --------------
 
-Join lobbies via a short code, instead of needing to send invites on Steam. Works with players who are **not** on your Steam friends list.
+Join lobbies via a short code, instead of needing to send invites on Steam. Works for **ALL** players, even those who are not on your Steam friends list.
 
 ![lobbycodeui](https://github.com/willuwontu/LobbyCodes/blob/main/lobbycodeui.png?raw=true)
 
