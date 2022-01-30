@@ -9,17 +9,17 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using TMPro;
 using Photon.Pun;
-using LobbyCodes.Networking;
-using LobbyCodes.Extensions;
+using LobbyImprovements.Networking;
+using LobbyImprovements.Extensions;
 
-namespace LobbyCodes.UI
+namespace LobbyImprovements.UI
 {
     public class LobbyUI
     {
 
         internal static void UpdateStreamerModeSettings()
         {
-            LobbyUI.input.SetActive(!LobbyCodes.StreamerMode);
+            LobbyUI.input.SetActive(!LobbyImprovements.StreamerMode);
         }
 
         private static GameObject uiCanvas
@@ -63,8 +63,8 @@ namespace LobbyCodes.UI
                 group.spacing = 10f;
                 group.padding = new RectOffset(10, 10, 40, 10);
 
-                LobbyCodes.instance.ExecuteAfterFrames(1, LobbyUI.SortChildren);
-                LobbyCodes.instance.ExecuteAfterFrames(5, LobbyUI.SortChildren);
+                LobbyImprovements.instance.ExecuteAfterFrames(1, LobbyUI.SortChildren);
+                LobbyImprovements.instance.ExecuteAfterFrames(5, LobbyUI.SortChildren);
 
                 return LobbyUI._BG;
             }
@@ -161,7 +161,7 @@ namespace LobbyCodes.UI
                 // Get BG to make sure it exists.
                 GameObject _ = LobbyUI.hostOnlyContainer;
 
-                var unboundToggle = UnboundLib.Utils.UI.MenuHandler.CreateToggle(LobbyCodes.OnlyHostCanInvite, "Only host can invite:", BG, null, 30, false, null, null, null, TextAlignmentOptions.Right);
+                var unboundToggle = UnboundLib.Utils.UI.MenuHandler.CreateToggle(LobbyImprovements.OnlyHostCanInvite, "Only host can invite:", BG, null, 30, false, null, null, null, TextAlignmentOptions.Right);
 
                 var bgImage = unboundToggle.transform.GetChild(0).gameObject.GetComponent<Image>();
                 var checkImage = unboundToggle.transform.GetChild(0).GetChild(0).gameObject.GetComponent<Image>();
@@ -208,12 +208,12 @@ namespace LobbyCodes.UI
                 image.material = checkImage.material;
 
                 toggle.graphic = image;
-                toggle.isOn = LobbyCodes.OnlyHostCanInvite;
+                toggle.isOn = LobbyImprovements.OnlyHostCanInvite;
 
                 toggle.onValueChanged.AddListener((value) =>
                 {
-                    LobbyCodes.OnlyHostCanInvite = value;
-                    LobbyCodes.instance.hostOnlyConfigToggle.GetComponent<Toggle>().isOn = value;
+                    LobbyImprovements.OnlyHostCanInvite = value;
+                    LobbyImprovements.instance.hostOnlyConfigToggle.GetComponent<Toggle>().isOn = value;
                     if (PhotonNetwork.LocalPlayer.IsMasterClient)
                     {
                         PhotonNetwork.LocalPlayer.SetOnlyHostCanInvite(value);
@@ -318,8 +318,8 @@ namespace LobbyCodes.UI
                 GameObject localGo = UnityEngine.GameObject.Find("/Game/UI/UI_MainMenu/Canvas/ListSelector/Main/Group/Local/Text");
                 TMP_FontAsset font = localGo.GetComponent<TextMeshProUGUI>().font;
                 Material[] fontMaterials = localGo.GetComponent<TextMeshProUGUI>().fontMaterials;
-                Sprite dropdownArrow = LobbyCodes.instance.assets.LoadAsset<Sprite>("DropdownArrow");
-                Sprite dropdownCheckMark = LobbyCodes.instance.assets.LoadAsset<Sprite>("DropdownCheckmark");
+                Sprite dropdownArrow = LobbyImprovements.instance.assets.LoadAsset<Sprite>("DropdownArrow");
+                Sprite dropdownCheckMark = LobbyImprovements.instance.assets.LoadAsset<Sprite>("DropdownCheckmark");
 
                 // The dropdown item
                 var kick = LobbyUI._kicklist = new GameObject("Kicklist", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(TMP_Dropdown), typeof(ButtonInteraction));
@@ -742,7 +742,7 @@ namespace LobbyCodes.UI
                     rect.offsetMin = new Vector2(0, 0);
                     rect.offsetMax = new Vector2(0, 0);
 
-                    LobbyCodes.instance.ExecuteAfterFrames(5, () =>
+                    LobbyImprovements.instance.ExecuteAfterFrames(5, () =>
                     {
                         rect = inputText.GetComponent<RectTransform>();
                         rect.anchorMin = new Vector2(0, 0);
@@ -751,7 +751,7 @@ namespace LobbyCodes.UI
                         rect.offsetMin = new Vector2(0, 0);
                         rect.offsetMax = new Vector2(0, 0);
 
-                        LobbyCodes.instance.ExecuteAfterFrames(5, () =>
+                        LobbyImprovements.instance.ExecuteAfterFrames(5, () =>
                         {
                             rect = inputText.GetComponent<RectTransform>();
                             rect.anchorMin = new Vector2(0, 0);
@@ -778,15 +778,15 @@ namespace LobbyCodes.UI
                 inputField.textComponent.color = new Color(0.9f, 0.9f, 0.9f, 0.8f);
                 inputField.selectionColor = new Color(0.5f, 0.5f, 0.5f, 0.7f);
 
-                inputField.onSelect.AddListener((str) => LobbyCodes.Log($"{str}"));
+                inputField.onSelect.AddListener((str) => LobbyImprovements.Log($"{str}"));
 
                 // Blip the input field to make it recognize that we've hooked things up now.
-                LobbyCodes.instance.ExecuteAfterFrames(5, () =>
+                LobbyImprovements.instance.ExecuteAfterFrames(5, () =>
                 { 
                     LobbyUI.input.SetActive(false);
-                    LobbyCodes.instance.ExecuteAfterFrames(5, () =>
+                    LobbyImprovements.instance.ExecuteAfterFrames(5, () =>
                     {
-                        LobbyUI.input.SetActive(!LobbyCodes.StreamerMode);
+                        LobbyUI.input.SetActive(!LobbyImprovements.StreamerMode);
                     });
                 });
 
@@ -850,7 +850,7 @@ namespace LobbyCodes.UI
                 // Get BG to make sure it exists.
                 GameObject _ = LobbyUI.CodesContainer;
 
-                Sprite clipboardIcon = LobbyCodes.instance.assets.LoadAsset<Sprite>("copy-regular");
+                Sprite clipboardIcon = LobbyImprovements.instance.assets.LoadAsset<Sprite>("copy-regular");
 
                 // The button object.
                 LobbyUI._copyButton = new GameObject("Copy Button", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(Button));
@@ -906,7 +906,7 @@ namespace LobbyCodes.UI
             {
                 if (LobbyUI._popover != null) { return LobbyUI._popover; }
 
-                Sprite popoverIcon = LobbyCodes.instance.assets.LoadAsset<Sprite>("Popover4");
+                Sprite popoverIcon = LobbyImprovements.instance.assets.LoadAsset<Sprite>("Popover4");
                 GameObject localGo = UnityEngine.GameObject.Find("/Game/UI/UI_MainMenu/Canvas/ListSelector/Main/Group/Local/Text");
                 var font = localGo.GetComponent<TextMeshProUGUI>().font;
                 var fontMaterials = localGo.GetComponent<TextMeshProUGUI>().fontMaterials;
@@ -969,13 +969,13 @@ namespace LobbyCodes.UI
             {
                 if (fadeCoroutine != null)
                 {
-                    LobbyCodes.instance.StopCoroutine(fadeCoroutine);
+                    LobbyImprovements.instance.StopCoroutine(fadeCoroutine);
                 }
 
                 LobbyUI.popover.SetActive(true);
                 ResetColors();
 
-                fadeCoroutine = LobbyCodes.instance.StartCoroutine(FadePopup());
+                fadeCoroutine = LobbyImprovements.instance.StartCoroutine(FadePopup());
             }
 
             private IEnumerator FadePopup()
@@ -1053,17 +1053,17 @@ namespace LobbyCodes.UI
 
             public void OnEnter()
             {
-                source.PlayOneShot(LobbyCodes.instance.hover[random.Next(LobbyCodes.instance.hover.Count)]);
+                source.PlayOneShot(LobbyImprovements.instance.hover[random.Next(LobbyImprovements.instance.hover.Count)]);
             }
 
             public void OnExit()
             {
-                source.PlayOneShot(LobbyCodes.instance.hover[random.Next(LobbyCodes.instance.hover.Count)]);
+                source.PlayOneShot(LobbyImprovements.instance.hover[random.Next(LobbyImprovements.instance.hover.Count)]);
             }
 
             public void OnClick()
             {
-                source.PlayOneShot(LobbyCodes.instance.click[random.Next(LobbyCodes.instance.click.Count)]);
+                source.PlayOneShot(LobbyImprovements.instance.click[random.Next(LobbyImprovements.instance.click.Count)]);
                 EventSystem.current.SetSelectedGameObject(null);
             }
 
