@@ -44,6 +44,7 @@ namespace LobbyImprovements.Networking
                     {
                         // Leave room if we're not
                         LobbyImprovements.instance.ExecuteAfterFrames(1, () => PhotonNetwork.LeaveRoom());
+                        LobbyImprovements.instance.ExecuteAfterFrames(3, () => LobbyUI.BG.SetActive(false));
                         return;
                     }
                     else
@@ -71,7 +72,7 @@ namespace LobbyImprovements.Networking
                 }
                 else
                 {
-                    LobbyUI.hostOnlyToggle.GetComponent<UnityEngine.UI.Toggle>().interactable = true;
+                    LobbyUI.hostOnlyToggle.GetComponent<UnityEngine.UI.Toggle>().interactable = false;
                     LobbyUI.kickContainer.SetActive(false);
                     LobbyUI.CodesContainer.SetActive(!PhotonNetwork.MasterClient.OnlyHostCanInvite());
                 }
