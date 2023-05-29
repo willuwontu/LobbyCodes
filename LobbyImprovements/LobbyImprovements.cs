@@ -25,7 +25,7 @@ namespace LobbyImprovements
         private const string ModId = "com.roundsmoddingcommunity.rounds.LobbyImprovements";
         private const string ModName = "Lobby Improvements";
         private static readonly string CompatibilityModName = ModName.Replace(" ","");
-        public const string Version = "1.0.0"; // What version are we on (major.minor.patch)?
+        public const string Version = "1.1.0"; // What version are we on (major.minor.patch)?
 
         internal GameObject hostOnlyConfigToggle;
 
