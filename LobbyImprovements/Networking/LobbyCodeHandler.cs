@@ -28,7 +28,8 @@ namespace LobbyImprovements.Networking
             "kr",
             "tr",
             "us",
-            "usw", 
+            "usw",
+            "ussc",
             "host_asia",
             "host_au",
             "host_cae",
@@ -44,6 +45,7 @@ namespace LobbyImprovements.Networking
             "host_tr",
             "host_us",
             "host_usw",
+            "host_ussc",
             INVALIDREGION }; // invalid should always be last (at index -1)
 
         private static string GetPureCode()

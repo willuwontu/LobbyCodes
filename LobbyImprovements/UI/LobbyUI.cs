@@ -1066,7 +1066,7 @@ namespace LobbyImprovements.UI
             public UnityEvent mouseClick = new UnityEvent();
             public UnityEvent mouseEnter = new UnityEvent();
             public UnityEvent mouseExit = new UnityEvent();
-            public Button button;
+            public Selectable selectable;
             public AudioSource source;
             public static ButtonInteraction instance;
 
@@ -1075,7 +1075,7 @@ namespace LobbyImprovements.UI
             private void Start()
             {
                 instance = this;
-                button = gameObject.GetComponent<Button>();
+                selectable = gameObject.GetComponent<Selectable>();
                 source = gameObject.GetOrAddComponent<AudioSource>();
 
                 mouseEnter.AddListener(OnEnter);
@@ -1085,7 +1085,7 @@ namespace LobbyImprovements.UI
 
             public void OnEnter()
             {
-                if (button.interactable)
+                if (selectable.interactable)
                 {
                     source.PlayOneShot(LobbyImprovements.instance.hover[random.Next(LobbyImprovements.instance.hover.Count)]);
                 }
@@ -1093,7 +1093,7 @@ namespace LobbyImprovements.UI
 
             public void OnExit()
             {
-                if (button.interactable)
+                if (selectable.interactable)
                 {
                     source.PlayOneShot(LobbyImprovements.instance.hover[random.Next(LobbyImprovements.instance.hover.Count)]);
                 }
@@ -1101,7 +1101,7 @@ namespace LobbyImprovements.UI
 
             public void OnClick()
             {
-                if (button.interactable)
+                if (selectable.interactable)
                 {
                     source.PlayOneShot(LobbyImprovements.instance.click[random.Next(LobbyImprovements.instance.click.Count)]);
                     EventSystem.current.SetSelectedGameObject(null);
