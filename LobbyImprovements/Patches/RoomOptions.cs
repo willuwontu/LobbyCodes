@@ -1,7 +1,7 @@
 ﻿using HarmonyLib;
 using Photon.Realtime;
 using System;
-using UnboundLib;
+using Unbound.Core;
 namespace LobbyImprovements.Patches
 {
     // patch to forcefully set RoomOptions.PublishUserId = true for rooms created by us

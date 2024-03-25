@@ -1,9 +1,9 @@
-﻿using UnboundLib.Utils.UI;
+﻿using Unbound.Core.Utils.UI;
 using UnityEngine;
 using UnityEngine.UI;
 using LobbyImprovements.Networking;
 using UnityEngine.SceneManagement;
-using UnboundLib;
+using Unbound.Core;
 using TMPro;
 
 namespace LobbyImprovements.UI
@@ -23,7 +23,7 @@ namespace LobbyImprovements.UI
 
         static void SetupUI(bool firstTime)
         {
-            Unbound.Instance.ExecuteAfterSeconds(firstTime ? 0.2f : 0f, () =>
+            UnboundCore.Instance.ExecuteAfterSeconds(firstTime ? 0.2f : 0f, () =>
             {
                 var onlineGo = GameObject.Find("/Game/UI/UI_MainMenu/Canvas/ListSelector/Online");
                 var spaceGo = onlineGo?.transform?.Find("Group/Space")?.transform;

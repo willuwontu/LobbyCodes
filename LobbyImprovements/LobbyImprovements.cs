@@ -4,20 +4,22 @@ using System.Collections.Generic;
 using System.Linq;
 using BepInEx;
 using BepInEx.Configuration;
-using UnboundLib.GameModes;
+using Unbound.Gamemodes;
 using UnityEngine;
 using Jotunn.Utils;
 using LobbyImprovements.Networking;
 using LobbyImprovements.UI;
-using UnboundLib.Utils.UI;
-using UnboundLib;
-using UnboundLib.Networking;
+using Unbound;
+using Unbound.Core.Utils.UI;
+using Unbound.Core;
+using Unbound.Core.Networking;
 using Photon.Pun;
 using HarmonyLib;
 
 namespace LobbyImprovements
 {
-    [BepInDependency("com.willis.rounds.unbound", BepInDependency.DependencyFlags.HardDependency)]
+    [BepInDependency("dev.rounds.unbound.core")]
+    [BepInDependency("dev.rounds.unbound.gamemodes")]
     [BepInPlugin(ModId, ModName, Version)]
     [BepInProcess("Rounds.exe")]
     public class LobbyImprovements : BaseUnityPlugin
@@ -25,7 +27,7 @@ namespace LobbyImprovements
         private const string ModId = "com.roundsmoddingcommunity.rounds.LobbyImprovements";
         private const string ModName = "Lobby Improvements";
         private static readonly string CompatibilityModName = ModName.Replace(" ","");
-        public const string Version = "1.1.0"; // What version are we on (major.minor.patch)?
+        public const string Version = "1.1.1"; // What version are we on (major.minor.patch)?
 
         internal GameObject hostOnlyConfigToggle;
 
@@ -65,11 +67,11 @@ namespace LobbyImprovements
 
             JoinUI.Init();
 
-            Unbound.RegisterClientSideMod(ModId);
+            UnboundCore.RegisterClientSideMod(ModId);
 
-            Unbound.RegisterCredits(ModName, new string[] {"willuwontu (Project Creation, UI)", "Pykess (Backend)" }, new string[] {"Support willuwontu", "Support Pykess" }, new string[] {"https://ko-fi.com/willuwontu", "https://ko-fi.com/pykess" });
+            UnboundCore.RegisterCredits(ModName, new string[] {"willuwontu (Project Creation, UI)", "Pykess (Backend)" }, new string[] {"Support willuwontu", "Support Pykess" }, new string[] {"https://ko-fi.com/willuwontu", "https://ko-fi.com/pykess" });
 
-            Unbound.RegisterMenu(ModName, () => { }, GUI, null, false);
+            UnboundCore.RegisterMenu(ModName, () => { }, GUI, null, false);
 
             GameModeManager.AddHook(GameModeHooks.HookGameStart, GameStart);
         }
@@ -119,7 +121,7 @@ namespace LobbyImprovements
         internal static void RPCS_Kick(int actorID)
         {
             if (PhotonNetwork.LocalPlayer.ActorNumber != actorID) { return; }
-            Unbound.Instance.StartCoroutine((IEnumerator)NetworkConnectionHandler.instance.InvokeMethod("DoDisconnect", "KICKED", "YOU HAVE BEEN KICKED FROM THE LOBBY"));
+            UnboundCore.Instance.StartCoroutine((IEnumerator)NetworkConnectionHandler.instance.InvokeMethod("DoDisconnect", "KICKED", "YOU HAVE BEEN KICKED FROM THE LOBBY"));
         }
     }
 }
