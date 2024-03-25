@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnboundLib;
+using Unbound.Core;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
@@ -153,7 +153,7 @@ namespace LobbyImprovements.UI
 
                 GameObject localGo = UnityEngine.GameObject.Find("/Game/UI/UI_MainMenu/Canvas/ListSelector/Main/Group/Local/Text");
                 TMP_FontAsset font = localGo.GetComponent<TextMeshProUGUI>().font;
-                Material[] fontMaterials = localGo.GetComponent<TextMeshProUGUI>().fontMaterials;
+                Material[] fontMaterials = new Material[] { localGo.GetComponent<TextMeshProUGUI>().fontMaterial };
 
                 // Get BG to make sure it exists.
                 GameObject _ = LobbyUI.hostOnlyContainer;
@@ -193,7 +193,7 @@ namespace LobbyImprovements.UI
                 // Get BG to make sure it exists.
                 GameObject _ = LobbyUI.hostOnlyContainer;
 
-                var unboundToggle = UnboundLib.Utils.UI.MenuHandler.CreateToggle(LobbyImprovements.OnlyHostCanInvite, "Only host can invite:", BG, null, 30, false, null, null, null, TextAlignmentOptions.Right);
+                var unboundToggle = Unbound.Core.Utils.UI.MenuHandler.CreateToggle(LobbyImprovements.OnlyHostCanInvite, "Only host can invite:", BG, null, 30, false, null, null, null, TextAlignmentOptions.Right);
 
                 var bgImage = unboundToggle.transform.GetChild(0).gameObject.GetComponent<Image>();
                 var checkImage = unboundToggle.transform.GetChild(0).GetChild(0).gameObject.GetComponent<Image>();
@@ -349,7 +349,7 @@ namespace LobbyImprovements.UI
                 // Stuff for the dropdown menu
                 GameObject localGo = UnityEngine.GameObject.Find("/Game/UI/UI_MainMenu/Canvas/ListSelector/Main/Group/Local/Text");
                 TMP_FontAsset font = localGo.GetComponent<TextMeshProUGUI>().font;
-                Material[] fontMaterials = localGo.GetComponent<TextMeshProUGUI>().fontMaterials;
+                Material[] fontMaterials = new Material[] { localGo.GetComponent<TextMeshProUGUI>().fontMaterial };
                 Sprite dropdownArrow = LobbyImprovements.instance.assets.LoadAsset<Sprite>("DropdownArrow");
                 Sprite dropdownCheckMark = LobbyImprovements.instance.assets.LoadAsset<Sprite>("DropdownCheckmark");
 
@@ -595,7 +595,7 @@ namespace LobbyImprovements.UI
 
                 GameObject localGo = UnityEngine.GameObject.Find("/Game/UI/UI_MainMenu/Canvas/ListSelector/Main/Group/Local/Text");
                 TMP_FontAsset font = localGo.GetComponent<TextMeshProUGUI>().font;
-                Material[] fontMaterials = localGo.GetComponent<TextMeshProUGUI>().fontMaterials;
+                Material[] fontMaterials = new Material[] { localGo.GetComponent<TextMeshProUGUI>().fontMaterial };
 
                 // Get BG to make sure it exists.
                 GameObject _ = LobbyUI.kickContainer;
@@ -621,7 +621,7 @@ namespace LobbyImprovements.UI
                 {
                     if (playerKickList.Count() > 0 && PhotonNetwork.LocalPlayer.IsMasterClient)
                     {
-                        Unbound.BuildModal()
+                        UnboundCore.BuildModal()
                             .Title("Kick Player")
                             .Message($"Kick {playerKickList[LobbyUI._dropdown.value].NickName} from the lobby?")
                             .ConfirmButton("Kick", () =>
@@ -710,7 +710,7 @@ namespace LobbyImprovements.UI
 
                 GameObject localGo = UnityEngine.GameObject.Find("/Game/UI/UI_MainMenu/Canvas/ListSelector/Main/Group/Local/Text");
                 var font = localGo.GetComponent<TextMeshProUGUI>().font;
-                var fontMaterials = localGo.GetComponent<TextMeshProUGUI>().fontMaterials;
+                Material[] fontMaterials = new Material[] { localGo.GetComponent<TextMeshProUGUI>().fontMaterial };
 
                 LobbyUI._input = new GameObject("LobbyCode Input", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(TMP_InputField));
                 LobbyUI._input.transform.SetParent(LobbyUI.CodesContainer.transform);
@@ -844,7 +844,7 @@ namespace LobbyImprovements.UI
 
                 GameObject localGo = UnityEngine.GameObject.Find("/Game/UI/UI_MainMenu/Canvas/ListSelector/Main/Group/Local/Text");
                 var font = localGo.GetComponent<TextMeshProUGUI>().font;
-                var fontMaterials = localGo.GetComponent<TextMeshProUGUI>().fontMaterials;
+                Material[] fontMaterials = new Material[] { localGo.GetComponent<TextMeshProUGUI>().fontMaterial };
 
                 LobbyUI._text = new GameObject("Text", typeof(RectTransform), typeof(CanvasRenderer), typeof(TextMeshProUGUI));
                 LobbyUI._text.transform.SetParent(LobbyUI.CodesContainer.transform);
@@ -941,7 +941,7 @@ namespace LobbyImprovements.UI
                 Sprite popoverIcon = LobbyImprovements.instance.assets.LoadAsset<Sprite>("Popover4");
                 GameObject localGo = UnityEngine.GameObject.Find("/Game/UI/UI_MainMenu/Canvas/ListSelector/Main/Group/Local/Text");
                 var font = localGo.GetComponent<TextMeshProUGUI>().font;
-                var fontMaterials = localGo.GetComponent<TextMeshProUGUI>().fontMaterials;
+                var fontMaterials = new Material[] { localGo.GetComponent<TextMeshProUGUI>().fontMaterial };
 
                 // Get BG to make sure it exists.
                 GameObject _ = LobbyUI.CodesContainer;

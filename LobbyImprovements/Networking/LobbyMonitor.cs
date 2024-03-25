@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using Photon.Pun;
-using UnboundLib;
+using Unbound.Core;
 using LobbyImprovements.UI;
 using LobbyImprovements.Networking;
 using ExitGames.Client.Photon;
@@ -8,7 +8,7 @@ using LobbyImprovements.Extensions;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnboundLib.Networking;
+using Unbound.Core.Networking;
 
 namespace LobbyImprovements.Networking
 {
@@ -111,7 +111,7 @@ namespace LobbyImprovements.Networking
             while (PhotonNetwork.CurrentRoom.Players.Values.Contains(player))
             {
                 NetworkingManager.RPC(typeof(LobbyImprovements), nameof(LobbyImprovements.RPCS_Kick), new Photon.Realtime.RaiseEventOptions { TargetActors = new int[] { player.ActorNumber } }, player.ActorNumber);
-                NetworkingManager.RPC(typeof(Unbound), nameof(Unbound.BuildInfoPopup), new Photon.Realtime.RaiseEventOptions { TargetActors = new int[] { player.ActorNumber } }, "You have been kicked from the lobby.");
+                NetworkingManager.RPC(typeof(UnboundCore), nameof(UnboundCore.BuildInfoPopup), new Photon.Realtime.RaiseEventOptions { TargetActors = new int[] { player.ActorNumber } }, "You have been kicked from the lobby.");
                 PhotonNetwork.CloseConnection(player);
                 yield return new WaitForSecondsRealtime(0.5f);
             }

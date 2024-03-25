@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net462</TargetFramework>
+    <TargetFramework>net472</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,15 +12,17 @@
     <EmbeddedResource Include="AssetsEmbedded\lobbycodes" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="UnboundLib" Version="2.10.2" />
-  </ItemGroup>
-
   <PropertyGroup>
-    <RoundsFolder>C:\Program Files (x86)\Steam\steamapps\common\ROUNDS</RoundsFolder>
+    <RoundsFolder>E:\Program Files (x86)\Steam\steamapps\common\ROUNDS</RoundsFolder>
   </PropertyGroup>
 
   <ItemGroup>
+    <Reference Include="UnboundLib">
+      <HintPath>$(RoundsFolder)\BepInEx\plugins\UnboundLib\UnboundLib.dll</HintPath>
+    </Reference>
+	<Reference Include="UnboundGamemodes">
+      <HintPath>$(RoundsFolder)\BepInEx\plugins\UnboundLib\UnboundGamemodes.dll</HintPath>
+    </Reference>
     <Reference Include="0Harmony">
       <HintPath>$(RoundsFolder)\BepInEx\core\0Harmony.dll</HintPath>
     </Reference>
